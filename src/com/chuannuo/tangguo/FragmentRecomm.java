@@ -307,9 +307,9 @@ public class FragmentRecomm extends BaseFragment {
 													}
 
 													appInfo.setFile(fileUrl);
-													String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
-													editor.putString(dUrl, fileUrl);
-													editor.commit();
+//													String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
+//													editor.putString(dUrl, fileUrl);
+//													editor.commit();
 													appInfo.setH5_big_url(h5Url);
 													appInfo.setIcon(iconUrl);
 													

@@ -320,13 +320,13 @@ public class DownloadService extends Service {
 				}
 				// 下载函数，以QQ为例子
 				// 增加权限;
-				String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
+				//String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
 				if(null == pref){
 					pref = getSharedPreferences(Constant.PREF_QIANBAO_SDK,
 							MODE_PRIVATE);	
 				}
 				editor = pref.edit();
-				long downloadSize = downloadFile(pref.getString(dUrl,appInfo.getFile()),
+				long downloadSize = downloadFile(appInfo.getFile(),
 						downloadFile);
 				if (downloadSize > 0) {
 					// 下载成功
@@ -385,6 +385,9 @@ public class DownloadService extends Service {
 	 * @return void
 	 */
 	private void adInstall() {
+		if(downloadFile.exists()){
+			downloadFile.delete();
+		}
 		Log.i(TAG, "---开始上报---");
 		if (pref.getInt(Constant.DOWNLOAD_TIMES, 0) == 0) {
 			editor.putInt(Constant.DOWNLOAD_TIMES, 1);

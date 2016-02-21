@@ -694,10 +694,10 @@ public class TangGuoWall {
 															+ h5Url;
 												}
 
-												//appInfo.setFile(fileUrl);
-												String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
-												editor.putString(dUrl, fileUrl);
-												editor.commit();
+												appInfo.setFile(fileUrl);
+//												String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
+//												editor.putString(dUrl, fileUrl);
+//												editor.commit();
 												appInfo.setH5_big_url(h5Url);
 												appInfo.setIcon(iconUrl);
 
@@ -793,10 +793,10 @@ public class TangGuoWall {
 																+ iconUrl;
 													}
 
-													//appInfo.setFile(fileUrl);
-													String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
-													editor.putString(dUrl, fileUrl);
-													editor.commit();
+													appInfo.setFile(fileUrl);
+//													String dUrl = Constant.PREF_TANGGUO_DATA+appInfo.getAdId();
+//													editor.putString(dUrl, fileUrl);
+//													editor.commit();
 													appInfo.setIcon(iconUrl);
 												}
 												appInfo.setSign_times(obj

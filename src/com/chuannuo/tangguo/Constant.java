@@ -10,12 +10,12 @@ public class Constant {
 	/**   
 	 * @Fields DOWNLOAD_DIR : app下载路径   
 	 */
-	public static final String DOWNLOAD_DIR = "app/download/";
+	public static final String DOWNLOAD_DIR = "qbspSDK/download/";
 	/**   
 	 * @Fields PREF_QIANBAO_PAY : sharedPreferenced,文件名   
 	 */
 	public static final String PREF_QIANBAO_SDK = "qianbaosuopingsdk";
-	public static final String PREF_TANGGUO_DATA = "tangguodata";
+	//public static final String PREF_TANGGUO_DATA = "tangguodata";
 	
 	/**   
 	 * @Fields PHONE_NUMBER : 记录电话号码，判断用户是否登陆过   
