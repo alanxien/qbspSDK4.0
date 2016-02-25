@@ -109,6 +109,31 @@ public class FragmentRecomm extends BaseFragment {
 		}
 		super.onResume();
 	}
+	
+	/** 
+	 * @Title: refreshData 
+	 * @Description: 数据更新 
+	 * @param  
+	 * @return void
+	 * @throws 
+	 */
+	public void refreshData(){
+		if (recommList != null && recommList.size() > 0) {
+			AppInfo app = new AppInfo();
+			for (int i = recommList.size() - 1; i >= 0; i--) {
+				app = recommList.get(i);
+				if (app.getResource_id() == pref
+						.getInt(Constant.RESOURCE_ID, 0)) {
+					recommList.remove(i);
+					break;
+				}
+			}
+			if (adapter != null) {
+				adapter.notifyDataSetChanged();
+			}
+
+		}
+	}
 
 	private void initView() {
 		view = super.getRootLinearLayout();
@@ -239,6 +264,10 @@ public class FragmentRecomm extends BaseFragment {
 													.getInt("is_show_integral");
 											textName = infoObject
 													.getString("txt_name");
+											editor.putString(Constant.TEXT_NAME, textName);
+											editor.putString(Constant.VC_PRICE, score+"");
+											editor.putInt(Constant.IS_SHOW, isShow);
+											editor.commit();
 										}
 										JSONArray jArray = jsonObject
 												.getJSONArray("data");

@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.chuannuo.tangguo.DepthTaskAdapter.SignClickListener;
 import com.chuannuo.tangguo.listener.ResponseStateListener;
 import com.chuannuo.tangguo.task.SpendPointTask;
 
@@ -45,7 +46,7 @@ import android.widget.Toast;
  * @data: 2015-7-18 上午1:45:47
  * @version: V1.0
  */
-public class FragmentDepth extends BaseFragment {
+public class FragmentDepth extends BaseFragment{
 
 	private LinearLayout view;
 	private ListView myListView;
@@ -81,6 +82,31 @@ public class FragmentDepth extends BaseFragment {
 
 		}
 		super.onResume();
+	}
+	
+	/** 
+	 * @Title: refresh 
+	 * @Description: 刷新数据 
+	 * @param  
+	 * @return void
+	 * @throws 
+	 */
+	public void refreshData(){
+		if (depthList != null && depthList.size() > 0) {
+			AppInfo app = new AppInfo();
+			for (int i = depthList.size() - 1; i >= 0; i--) {
+				app = depthList.get(i);
+				if (app.getResource_id() == pref
+						.getInt(Constant.S_RESOURCE_ID, 0)) {
+					depthList.remove(i);
+					break;
+				}
+			}
+			if (adapter != null) {
+				adapter.notifyDataSetChanged();
+			}
+
+		}
 	}
 
 	/**
@@ -162,6 +188,15 @@ public class FragmentDepth extends BaseFragment {
 													if (null != childObj) {
 														appInfo.setTitle(childObj
 																.getString("title"));
+														if(appInfo.getTitle().equals("")){
+															appInfo.setTitle(childObj
+																	.getString("name"));
+														}
+														appInfo.setIsShow(pref.getInt(Constant.IS_SHOW, 1));
+														appInfo.setTextName(pref.getString(Constant.TEXT_NAME, "积分"));
+
+														appInfo.setVcPrice(Double.parseDouble(pref.getString(Constant.VC_PRICE, "1")));
+														
 														appInfo.setResource_id(childObj
 																.getInt("id"));
 														appInfo.setAdId(childObj
@@ -170,6 +205,18 @@ public class FragmentDepth extends BaseFragment {
 																.getString("resource_size"));
 														appInfo.setB_type(childObj
 																.getInt("btype"));
+														appInfo.setScore((int)(childObj
+																.getInt("score")*appInfo.getVcPrice()));
+														appInfo.setClicktype(childObj.getInt("clicktype"));
+														String h5Url = childObj
+																.getString("h5_big_url");
+														
+														appInfo.setInstall_id(obj
+																.getInt("ad_install_id"));
+														appInfo.setIs_photo(obj.getInt("is_photo"));
+														appInfo.setPhoto_integral((int)(obj.getInt("photo_integral")*appInfo.getVcPrice()));
+														appInfo.setPhoto_status(obj.getInt("photo_status"));
+														appInfo.setIs_photo_task(obj.getInt("is_photo_task"));
 
 														String fileUrl = childObj
 																.getString("file");
@@ -185,9 +232,14 @@ public class FragmentDepth extends BaseFragment {
 															iconUrl = Constant.URL.ROOT_URL
 																	+ iconUrl;
 														}
+														if (!h5Url.contains("http")) {
+															h5Url = Constant.URL.ROOT_URL
+																	+ h5Url;
+														}
 
 														appInfo.setFile(fileUrl);
 														appInfo.setIcon(iconUrl);
+														appInfo.setH5_big_url(h5Url);
 													}
 													appInfo.setSign_times(obj
 															.getInt("sign_count"));
@@ -199,11 +251,10 @@ public class FragmentDepth extends BaseFragment {
 															.getString("package_name"));
 													appInfo.setIsAddIntegral(obj
 															.getInt("is_add_integral"));
-													appInfo.setScore(obj
-															.getInt("integral"));
-
-													if (appInfo.getIsAddIntegral() == 0
-															|| isSignTime(obj)) {
+													appInfo.setSign(true);
+													if ((appInfo.getIsAddIntegral() == 0 && appInfo.getScore()>0)
+													|| isSignTime(obj) ||(appInfo.getIs_photo_task() == 1 && 
+															appInfo.getPhoto_status()==0)) {
 														depthList.add(appInfo);
 													}
 
@@ -270,7 +321,13 @@ public class FragmentDepth extends BaseFragment {
 					myListView.setVisibility(View.VISIBLE);
 					if (null == adapter) {
 						adapter = new DepthTaskAdapter(getActivity(),
-								depthList, myListView);
+								depthList, myListView,new SignClickListener() {
+									
+									@Override
+									public void onSignClickListener(AppInfo appInfo) {
+										mListener.onBtnClickListener(Constant.STEP_2, appInfo);
+									}
+								});
 					} else {
 						adapter.notifyDataSetChanged();
 					}

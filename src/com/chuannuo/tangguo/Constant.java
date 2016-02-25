@@ -10,7 +10,8 @@ public class Constant {
 	/**   
 	 * @Fields DOWNLOAD_DIR : app下载路径   
 	 */
-	public static final String DOWNLOAD_DIR = "qbspSDK/download/";
+	public static final String DOWNLOAD_DIR = "tangguo/download/";
+	public static final String IMG_DIR = "tangguo/download/image/";
 	/**   
 	 * @Fields PREF_QIANBAO_PAY : sharedPreferenced,文件名   
 	 */
@@ -30,6 +31,10 @@ public class Constant {
 	public static final String DOWN_TIME = "downLoadTime";//记录下载时间，超过一天可重新下载
 	public static final String APP_RUNNING_TIME = "appRunningTime";//app运行时间
 	//public static final String APP_SIGN_IS_SUCCESS = "appSignIsSuccess"; //app签到是否成功，0没开始签到，1未完成的签到，2签到成功
+	public static final String VC_PRICE = "vcPrice";
+	public static final String IS_SHOW = "isShow";
+	public static final String TEXT_NAME = "textName";
+	public static final String IS_REFRESH = "isRefresh";
 	
 	/**   
 	 * @Fields NET_ERROR : 网络返回错误   
@@ -44,9 +49,10 @@ public class Constant {
 	public static final String TANGGUO_APPID = "TANGGUO_APPID";
 	public static final String IS_FIRST_IN = "IS_FIRST_IN";
 	public static final String IS_REPORT = "IS_REPORT";
+	public static final String IS_SIGN = "ISSIGN";
 	public static final int STEP_1 = 1; 
 	public static final int STEP_2 = 2;
-	public static final int STEP_3 = 3;
+	//public static final int STEP_3 = 3;
 	
 	/**
 	 * @author alan.xie
@@ -75,6 +81,9 @@ public class Constant {
 		public static final String DOWNLOAD_URL = BASE_URL+"getResourceListHtml"; //截图任务接口
 		public static final String UPLOADS_PHOTO = BASE_URL +"uploadsPhoto";//上传图片
 		public static final String UPLOADS_PHOTO_H5 = BASE_URL +"uploadsPhotoHtml";//上传图片
+		
+		public static final String GET_AD_ALERT = BASE_URL + "getUserAdAlert";//图片审核
+		public static final String MOD_AD_ALERT = BASE_URL + "modifyUserAdAlert";//图片审核
 	}
 	
 	/**
@@ -90,6 +99,8 @@ public class Constant {
 		public static final String UNFINISHED_TASK = "未完成任务";
 		public static final String APP_DETAIL = "应用详情";
 		public static final String LOADING = "数据加载中...";
+		public static final String UPLODING = "正在上传...";
+		public static final String COMPRESS = "正在压缩...";
 		public static final String IMM_DOWN = "立即下载";
 		public static final String DEPTH_TIPS = "亲！您还木有未完成的任务。";
 	}

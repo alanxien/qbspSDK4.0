@@ -8,7 +8,6 @@
  */
 package com.chuannuo.tangguo;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -23,7 +22,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -68,9 +66,9 @@ public class FragmentDownLoad extends BaseFragment {
 	private TextView tv_tips3;
 	private RelativeLayout rl_upload; // 示例图
 	private ImageView iv_example;
-	private ImageView iv_upload;
+	public ImageView iv_upload;
 
-	private TextView tv_desc;
+	public TextView tv_desc;
 	private TextView tv_downLoad;
 	private TextView tv_total_score;
 	private Drawable cachedImage;
@@ -409,7 +407,6 @@ public class FragmentDownLoad extends BaseFragment {
 	private void initData() {
 		appInfo = (AppInfo) getArguments().getSerializable("item");
 		if (null != appInfo) {
-
 			if (appInfo.getIsShow() == 1) {
 				linearLayout4.setVisibility(View.GONE);
 			} else {
@@ -430,16 +427,31 @@ public class FragmentDownLoad extends BaseFragment {
 							+ appInfo.getTextName() + "，（注意只有一次上传机会，请严格按照要求上传）");
 					rl_upload.setVisibility(View.VISIBLE);
 					iv_upload.setVisibility(View.VISIBLE);
+					editor.putBoolean(Constant.IS_SIGN, false);
+					editor.commit();
 					loadImage();
 				} else if (appInfo.getClicktype() == 8) {
-					tv_downLoad.setVisibility(View.VISIBLE);
+					if(appInfo.isSign()){
+						tv_downLoad.setVisibility(View.GONE);
+						editor.putBoolean(Constant.IS_SIGN, true);
+					}else{
+						tv_downLoad.setVisibility(View.VISIBLE);
+						editor.putBoolean(Constant.IS_SIGN, false);
+					}
+					editor.commit();
 					String str = "";
 					if (appInfo.getScore() > 0) {
-						str = appInfo.getAlert() + appInfo.getScore()
-								+ appInfo.getTextName();
+						if(appInfo.getAlert()==null||appInfo.getAlert().equals("")){
+							str = "试玩3分钟可获得" + appInfo.getScore()
+									+ appInfo.getTextName();
+						}else{
+							str = appInfo.getAlert() + appInfo.getScore()
+									+ appInfo.getTextName();
+						}
+						
 					}
 					if (appInfo.getIs_photo() == 1 || appInfo.isSign()) {
-						tv_tips1.setText(str + "请到未完成任务列表中,按下面示例图截图上传即可获得 "
+						tv_tips1.setText(str + ",请到未完成任务列表中,按下面示例图截图上传即可获得 "
 								+ appInfo.getPhoto_integral()
 								+ appInfo.getTextName()
 								+ "，（注意只有一次上传机会，请严格按照要求上传）");

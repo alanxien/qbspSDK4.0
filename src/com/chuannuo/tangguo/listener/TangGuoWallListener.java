@@ -26,4 +26,5 @@ public interface TangGuoWallListener {
 	*/
 	void onAddPoint(int status,String appName,int point);
 	void onSign(int status,String appName,int point);
+	void onUploadImgs(int status,double point);
 }

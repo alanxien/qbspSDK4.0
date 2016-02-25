@@ -160,4 +160,15 @@ TangGuoDataListListener,DownLoadListener,SignInListener{
 			Toast.makeText(this, "签到失败------"+point, Toast.LENGTH_LONG).show();
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see com.chuannuo.tangguo.listener.TangGuoWallListener#onUploadImgs(int, int)
+	 */
+	@Override
+	public void onUploadImgs(int status, double point) {
+		if(status == 1){
+			Toast.makeText(this, "图片审核成功---"+point, Toast.LENGTH_SHORT).show();
+		}
+		
+	}
 }
