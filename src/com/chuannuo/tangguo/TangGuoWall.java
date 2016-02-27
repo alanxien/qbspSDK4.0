@@ -603,6 +603,12 @@ public class TangGuoWall {
 	private static void getRecomList(){
 		HttpUtil.setParams("app_id", pref.getString(Constant.APP_ID, "0"));
 		HttpUtil.setParams("channel_id", TangGuoWall.APPID);
+		HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
+		HttpUtil.setParams("city", pref.getString(Constant.CITY, ""));
+		HttpUtil.setParams("isp", pref.getString(Constant.ISP, "0.0.0.0"));
+		HttpUtil.setParams("imsi", pref.getString(Constant.CODE, ""));
+		PhoneInformation.initTelephonyManager(context);
+		HttpUtil.setParams("imsi", PhoneInformation.getImsi());
 		HttpUtil.post(Constant.URL.DOWNLOAD_URL,
 				new ResponseStateListener() {
 
@@ -1023,6 +1029,8 @@ public class TangGuoWall {
 				PhoneInformation.getMacAddress());
 		HttpUtil.setParams("androidid", Secure.getString(
 				context.getContentResolver(), Secure.ANDROID_ID));
+		HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
+		HttpUtil.setParams("code", pref.getString(Constant.CODE, ""));
 		/*
 		 * 增加积分（防止用户第一次下载应用没有体验足够长时间，而没有加积分）
 		 */

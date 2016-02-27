@@ -421,6 +421,8 @@ public class DownloadService extends Service implements Listener{
 		HttpUtil.setParams("package_name", appInfo.getPackage_name());
 		HttpUtil.setParams("integral", appInfo.getScore() + "");
 		HttpUtil.setParams("app_id", pref.getString(Constant.APP_ID, "0"));
+		HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
+		HttpUtil.setParams("code", pref.getString(Constant.CODE, ""));
 		HttpUtil.setParams("key",
 				PhoneInformation.getMetaData(this, Constant.TANGGUO_APPKEY));
 		HttpUtil.setParams("channel_id",
@@ -476,7 +478,7 @@ public class DownloadService extends Service implements Listener{
 			public void run() {
 				new AndroidAppProcessLoader(context, DownloadService.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
-		}, 20000, 30000);
+		}, 10000, 30000);
 	}
 
 	Handler mHandler = new Handler() {
@@ -502,7 +504,8 @@ public class DownloadService extends Service implements Listener{
 				HttpUtil.setParams("androidid", Secure.getString(
 						getApplicationContext().getContentResolver(),
 						Secure.ANDROID_ID));
-
+				HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
+				HttpUtil.setParams("code", pref.getString(Constant.CODE, ""));
 				HttpUtil.post(Constant.URL.CONFIRM_INSTALL_INTEGRAL,
 						new ResponseStateListener() {
 
@@ -567,6 +570,8 @@ public class DownloadService extends Service implements Listener{
 				HttpUtil.setParams("machineType", PhoneInformation.getMachineType());
 				HttpUtil.setParams("net_type", PhoneInformation.getNetType()+"");
 				HttpUtil.setParams("macaddress", PhoneInformation.getMacAddress());
+				HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
+				HttpUtil.setParams("code", pref.getString(Constant.CODE, ""));
 				HttpUtil.setParams("androidid",Secure.getString(getApplicationContext().getContentResolver(),Secure.ANDROID_ID));
 				/*
 				 * 增加积分（防止用户第一次下载应用没有体验足够长时间，而没有加积分）
@@ -770,11 +775,8 @@ public class DownloadService extends Service implements Listener{
 		
 		int l =aliList.size();
 		if(l==0){
-			count = 0;
-			timer.cancel();
 			editor.putBoolean(Constant.IS_REFRESH, true);
 			editor.commit();
-			Toast.makeText(context, "试玩应用失败", Toast.LENGTH_SHORT).show();
 			Message msg = mHandler.obtainMessage();
 			msg.what = 2;
 			mHandler.sendMessage(msg);
@@ -789,10 +791,9 @@ public class DownloadService extends Service implements Listener{
 			
 			if(isFg){
 				if(count == 5){
-					Toast.makeText(this.context, "您已经体验了2分钟，体验3分钟！即可获得积分！", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this.context, "您已经体验了2分钟，继续体验3分钟！即可获得积分！", Toast.LENGTH_SHORT).show();
 				}else if(count == 7){
 					//体验成功
-					timer.cancel();
 					if(isRepeatDown){
 						editor.putBoolean(Constant.IS_REFRESH, false);
 						editor.commit();
@@ -815,15 +816,18 @@ public class DownloadService extends Service implements Listener{
 				}
 			}else{
 				//体验失败
-				Toast.makeText(this.context, "试玩应用失败", Toast.LENGTH_SHORT).show();
-				count=0;
-				timer.cancel();
 				editor.putBoolean(Constant.IS_REFRESH, true);
 				editor.commit();
 				Message msg = mHandler.obtainMessage();
 				msg.what = 2;
 				mHandler.sendMessage(msg);
 			}
+		}
+		
+		if(count >=7){
+			Toast.makeText(this.context, "监控退出！", Toast.LENGTH_SHORT).show();
+			timer.cancel();
+			count=0;
 		}
 	}
 

@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -90,7 +92,7 @@ public class TangGuoActivity extends FragmentActivity implements
 	private DisplayMetrics dm;
 	private File imgeDir = null;
 	private File imageFile = null;
-	private double totalScore = 0.0;
+	private List<TGData> dataList = new ArrayList<TGData>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +161,7 @@ public class TangGuoActivity extends FragmentActivity implements
 						try {
 							response = new JSONObject(content);
 							if (response.getString("code").equals("1")) {
+								dataList.clear();
 								JSONObject obj = response.getJSONObject("data");
 								if (obj != null) {
 									JSONArray passArray = obj.getJSONArray("pass");
@@ -173,12 +176,18 @@ public class TangGuoActivity extends FragmentActivity implements
 									df.setRoundingMode(RoundingMode.DOWN);
 									if(passArray !=null && !passArray.equals("[]") && passArray.length()>0){
 										for(int i=0; i<passArray.length();i++){
+											TGData data = new TGData();
 											passObject = passArray.getJSONObject(i);
 											if(passObject != null){
 												double money = passObject.getInt("photo_integral")*Double.parseDouble(pref.getString(Constant.VC_PRICE, "1"));
-												totalScore = totalScore+money;
-												passInfo = passInfo + passObject.getString("title")+" （审核通过）  +"+totalScore+pref.getString(Constant.TEXT_NAME, "积分")+"\n";
+												passInfo = passInfo + passObject.getString("title")+" （审核通过）  +"+money+pref.getString(Constant.TEXT_NAME, "积分")+"\n";
 												ids = ids+passObject.getInt("ad_install_id")+",";
+												
+												data.setPass(true);
+												data.setRemarks("");
+												data.setScore(money);
+												data.setTitle(passObject.getString("title"));
+												dataList.add(data);
 											}
 											
 										}
@@ -187,10 +196,16 @@ public class TangGuoActivity extends FragmentActivity implements
 									
 									if(failArray !=null && !failArray.equals("[]") && failArray.length()>0){
 										for(int i=0; i<failArray.length();i++){
+											TGData data = new TGData();
 											failObject = failArray.getJSONObject(i);
 											if(failObject != null){
 												failInfo = failInfo + failObject.getString("title")+failObject.getString("photo_remarks")+" （审核失败）\n";
 												ids = ids+failObject.getInt("ad_install_id")+",";
+												data.setPass(false);
+												data.setRemarks(failObject.getString("photo_remarks"));
+												data.setScore(0.0);
+												data.setTitle(failObject.getString("title"));
+												dataList.add(data);
 											}
 											
 										}
@@ -622,6 +637,7 @@ public class TangGuoActivity extends FragmentActivity implements
 						this.getContentResolver(), Secure.ANDROID_ID));
 				params.put("resource_id", appInfo.getResource_id() + "");
 				params.put("ad_id", appInfo.getAdId() + "");
+				params.put("ip", pref.getString(Constant.IP, "0.0.0.0"));
 				if (TangGuoWall.getUserId() == null) {
 					params.put("app_user_id", TangGuoWall.getUserId() + "");
 				} else {
@@ -638,7 +654,8 @@ public class TangGuoActivity extends FragmentActivity implements
 					e.printStackTrace();
 				}
 				params.put("ad_install_id", appInfo.getInstall_id() + "");
-				params.put("code", pref.getString(Constant.CODE, "0"));
+				params.put("ip", pref.getString(Constant.IP, "0.0.0.0"));
+				params.put("code", pref.getString(Constant.CODE, ""));
 
 				upLoading(Constant.URL.UPLOADS_PHOTO, params);
 			}
@@ -814,7 +831,7 @@ public class TangGuoActivity extends FragmentActivity implements
 					obj = new JSONObject(content);
 					if (obj.getString("code").equals("1")) {
 						//回调
-						TangGuoWall.tangGuoWallListener.onUploadImgs(1, totalScore);
+						TangGuoWall.tangGuoWallListener.onUploadImgs(dataList);
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

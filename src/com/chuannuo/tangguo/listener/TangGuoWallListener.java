@@ -8,6 +8,10 @@
  */
 package com.chuannuo.tangguo.listener;
 
+import java.util.List;
+
+import com.chuannuo.tangguo.TGData;
+
 /** 
  * TODO<请描述这个类是干什么的> 
  * @author  xie.xin 
@@ -26,5 +30,5 @@ public interface TangGuoWallListener {
 	*/
 	void onAddPoint(int status,String appName,int point);
 	void onSign(int status,String appName,int point);
-	void onUploadImgs(int status,double point);
+	void onUploadImgs(List<TGData> dataList);
 }

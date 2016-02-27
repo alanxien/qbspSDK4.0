@@ -2,11 +2,17 @@ package com.chuannuo.tangguo;
 
 import java.util.List;
 
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.chuannuo.tangguo.R;
 import com.chuannuo.tangguo.listener.DownLoadListener;
 import com.chuannuo.tangguo.listener.SignInListener;
 import com.chuannuo.tangguo.listener.TangGuoDataListListener;
 import com.chuannuo.tangguo.listener.TangGuoWallListener;
+import com.chuannuo.tangguo.net.RequestParams;
+import com.chuannuo.tangguo.net.TGHttpResponseHandler;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -26,7 +32,7 @@ TangGuoDataListListener,DownLoadListener,SignInListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		TangGuoWall.init(this,"123");
 		btn_show_wall = (Button) findViewById(R.id.btn_show_wall);
 		btn_get_data_list = (Button) findViewById(R.id.btn_get_data_list);
@@ -73,9 +79,9 @@ TangGuoDataListListener,DownLoadListener,SignInListener{
 	@Override
 	public void onAddPoint(int status, String appName, int score) {
 		if(status == 1){
-			Toast.makeText(MainActivity.this, "体验应用成功", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "体验应用成功"+score, Toast.LENGTH_SHORT).show();
 		}else{
-			Toast.makeText(MainActivity.this, "体验应用失败", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "体验应用失败"+score, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -162,13 +168,13 @@ TangGuoDataListListener,DownLoadListener,SignInListener{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.chuannuo.tangguo.listener.TangGuoWallListener#onUploadImgs(int, int)
+	 * @see com.chuannuo.tangguo.listener.TangGuoWallListener#onUploadImgs(java.util.List)
 	 */
 	@Override
-	public void onUploadImgs(int status, double point) {
-		if(status == 1){
-			Toast.makeText(this, "图片审核成功---"+point, Toast.LENGTH_SHORT).show();
+	public void onUploadImgs(List<TGData> dataList) {
+		if(dataList.size()>0){
+			
 		}
-		
 	}
+
 }

@@ -35,6 +35,9 @@ public class Constant {
 	public static final String IS_SHOW = "isShow";
 	public static final String TEXT_NAME = "textName";
 	public static final String IS_REFRESH = "isRefresh";
+	public static final String IP = "ip";
+	public static final String ISP = "isp";
+	public static final String CITY = "city";
 	
 	/**   
 	 * @Fields NET_ERROR : 网络返回错误   
@@ -84,6 +87,7 @@ public class Constant {
 		
 		public static final String GET_AD_ALERT = BASE_URL + "getUserAdAlert";//图片审核
 		public static final String MOD_AD_ALERT = BASE_URL + "modifyUserAdAlert";//图片审核
+		public static final String RESOURCE_PHOTO = BASE_URL + "resourcePhoto";//图片列表
 	}
 	
 	/**

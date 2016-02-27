@@ -8,6 +8,8 @@
  */
 package com.chuannuo.tangguo;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,14 +18,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -51,6 +57,7 @@ public class FragmentDownLoad extends BaseFragment {
 	private LinearLayout linearLayout7; // step 2
 	private LinearLayout linearLayout8; // step 3
 	public LinearLayout linearLayout9; // upload image
+	public LinearLayout linearLayout10;
 
 	private ImageView iv_logo;
 	private TextView tv_app_name;
@@ -61,9 +68,11 @@ public class FragmentDownLoad extends BaseFragment {
 	private ImageView ivStep1;
 	private ImageView ivStep2;
 	private ImageView ivStep3;
+	private ImageView ivStep4;
 	private TextView tv_tips1;
 	private TextView tv_tips2;
 	private TextView tv_tips3;
+	private TextView tv_tips4;
 	private RelativeLayout rl_upload; // 示例图
 	private ImageView iv_example;
 	public ImageView iv_upload;
@@ -75,16 +84,21 @@ public class FragmentDownLoad extends BaseFragment {
 	private Drawable cachedImage1;
 	public AppInfo appInfo;
 	public PopupWindow popupWindow;
+	
+	private ListView myListView;
+	private ArrayList<String> sList;
+	private ArrayAdapter<String> mAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		initView();
-		initData();
+		initData(); 
 		return view;
 	}
 
 	private void initView() {
+		appInfo = (AppInfo) getArguments().getSerializable("item");
 		view = super.getRootLinearLayout();
 
 		scrollView = new ScrollView(getActivity());
@@ -189,14 +203,17 @@ public class FragmentDownLoad extends BaseFragment {
 		linearLayout7 = new LinearLayout(getActivity());
 		linearLayout8 = new LinearLayout(getActivity());
 		linearLayout9 = new LinearLayout(getActivity());
+		linearLayout10 = new LinearLayout(getActivity());
 
 		ivStep1 = new ImageView(getActivity());
 		ivStep2 = new ImageView(getActivity());
 		ivStep3 = new ImageView(getActivity());
+		ivStep4 = new ImageView(getActivity());
 
 		tv_tips1 = new TextView(getActivity());
 		tv_tips2 = new TextView(getActivity());
 		tv_tips3 = new TextView(getActivity());
+		tv_tips4 = new TextView(getActivity());
 
 		LinearLayout.LayoutParams lp7 = new LinearLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -204,6 +221,7 @@ public class FragmentDownLoad extends BaseFragment {
 		linearLayout6.setLayoutParams(lp7);
 		linearLayout7.setLayoutParams(lp7);
 		linearLayout8.setLayoutParams(lp7);
+		linearLayout10.setLayoutParams(lp7);
 		/*
 		 * 图片上传
 		 */
@@ -278,12 +296,15 @@ public class FragmentDownLoad extends BaseFragment {
 		ivStep1.setLayoutParams(lp7);
 		ivStep2.setLayoutParams(lp7);
 		ivStep3.setLayoutParams(lp7);
+		ivStep4.setLayoutParams(lp7);
 		ivStep1.setImageBitmap(ResourceUtil.getImageFromAssetsFile(
 				getActivity(), "task_step1.png"));
 		ivStep2.setImageBitmap(ResourceUtil.getImageFromAssetsFile(
 				getActivity(), "task_step2.png"));
 		ivStep3.setImageBitmap(ResourceUtil.getImageFromAssetsFile(
 				getActivity(), "task_step3.png"));
+		ivStep4.setImageBitmap(ResourceUtil.getImageFromAssetsFile(
+				getActivity(), "task_step4.png"));
 
 		lp7.setMargins(10, 0, 10, 10);
 		tv_tips1.setLayoutParams(lp7);
@@ -303,6 +324,11 @@ public class FragmentDownLoad extends BaseFragment {
 		tv_tips3.setText("每隔2天可签到一次，签到3次任务完成");
 		tv_tips3.setTextSize(16);
 		tv_tips3.setTextColor(Color.parseColor(Constant.ColorValues.LIGHT_RED));
+		
+		tv_tips4.setLayoutParams(lp7);
+		tv_tips4.setText("");
+		tv_tips4.setTextSize(16);
+		tv_tips4.setTextColor(Color.parseColor(Constant.ColorValues.LIGHT_RED));
 
 		linearLayout6.addView(ivStep1);
 		linearLayout6.addView(tv_tips1);
@@ -310,9 +336,20 @@ public class FragmentDownLoad extends BaseFragment {
 		linearLayout7.addView(tv_tips2);
 		linearLayout8.addView(ivStep3);
 		linearLayout8.addView(tv_tips3);
+		
 		linearLayout4.addView(linearLayout6);
 		linearLayout4.addView(linearLayout7);
 		linearLayout4.addView(linearLayout8);
+		if (appInfo.getClicktype() == 1 || (appInfo.getClicktype() ==8 && appInfo.getIs_photo_task() == 1)){
+			if(appInfo.getPhoto_remarks()!=null && !appInfo.getPhoto_remarks().equals("")){
+				tv_tips4.setText(appInfo.getPhoto_remarks());
+				linearLayout10.addView(ivStep4);
+				linearLayout10.addView(tv_tips4);
+				linearLayout4.addView(linearLayout10);
+			}
+			
+		}
+		Log.w("FragmentDownLoad", appInfo.getClicktype()+"--"+appInfo.getIs_photo_task()+"--"+appInfo.getPhoto_remarks());
 		linearLayout4.addView(linearLayout9);
 
 		tv_desc = new TextView(getActivity());
@@ -405,7 +442,6 @@ public class FragmentDownLoad extends BaseFragment {
 	}
 
 	private void initData() {
-		appInfo = (AppInfo) getArguments().getSerializable("item");
 		if (null != appInfo) {
 			if (appInfo.getIsShow() == 1) {
 				linearLayout4.setVisibility(View.GONE);
@@ -473,11 +509,6 @@ public class FragmentDownLoad extends BaseFragment {
 					tv_tips3.setText("每隔" + appInfo.getSign_rules()
 							+ "天可签到一次，签到" + appInfo.getNeedSign_times()
 							+ "次任务完成");
-
-					// tv_tips2.setText("安装完成后，请到未完成任务列表中，继续签到，每次签到即可获得0.1元。");
-					// tv_tips3.setText("每隔" + appInfo.getSign_rules() + ""
-					// + "天可以签到 一次，签到" + appInfo.getNeedSign_times() +
-					// "次，任务完成");
 				}
 			}
 

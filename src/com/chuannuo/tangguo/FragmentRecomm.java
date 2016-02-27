@@ -11,6 +11,7 @@ package com.chuannuo.tangguo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.chuannuo.tangguo.listener.ResponseStateListener;
+import com.chuannuo.tangguo.net.RequestParams;
+import com.chuannuo.tangguo.net.TGHttpResponseHandler;
 
 /**
  * TODO<请描述这个类是干什么的>
@@ -54,6 +58,10 @@ public class FragmentRecomm extends BaseFragment {
 	private int isShow = 0;
 	private String textName = "积分";
 	private boolean isFirst = false;
+	
+	private String ip;
+	private String isp;
+	private String city;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -162,6 +170,9 @@ public class FragmentRecomm extends BaseFragment {
 	Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
+			case 1:
+				getIp();
+				break;
 			case 2:
 				initData();
 				break;
@@ -173,6 +184,7 @@ public class FragmentRecomm extends BaseFragment {
 					adapter.notifyDataSetChanged();
 				}
 				myListView.setAdapter(adapter);
+				getIp();
 				break;
 			default:
 				break;
@@ -215,7 +227,7 @@ public class FragmentRecomm extends BaseFragment {
 						String code = jsonObject.getString("code");
 						if (code.equals("1")) {
 							Message msg = mHandler.obtainMessage();
-							msg.what = 2;
+							msg.what = 1;
 							mHandler.sendMessage(msg);
 						} else {
 							Toast.makeText(getActivity(), "获取数据失败",
@@ -241,6 +253,12 @@ public class FragmentRecomm extends BaseFragment {
 		if (recommList.size() <= 0) {
 			HttpUtil.setParams("app_id", pref.getString(Constant.APP_ID, "0"));
 			HttpUtil.setParams("channel_id", TangGuoWall.APPID);
+			HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
+			HttpUtil.setParams("city", pref.getString(Constant.CITY, ""));
+			HttpUtil.setParams("isp", pref.getString(Constant.ISP, "0.0.0.0"));
+			HttpUtil.setParams("imsi", pref.getString(Constant.CODE, ""));
+			PhoneInformation.initTelephonyManager(getActivity());
+			HttpUtil.setParams("imsi", PhoneInformation.getImsi());
 			HttpUtil.post(Constant.URL.DOWNLOAD_URL,
 					new ResponseStateListener() {
 
@@ -344,6 +362,7 @@ public class FragmentRecomm extends BaseFragment {
 													
 													appInfo.setClicktype(obj.getInt("clicktype"));
 													appInfo.setIs_photo(obj.getInt("is_phopo"));
+													appInfo.setPhoto_remarks(obj.getString("photo_remarks"));
 													appInfo.setPhoto_integral((int)(obj.getInt("photo_integral")*score));
 													appInfo.setTotalScore((int) ((obj
 															.getInt("score")+obj.getInt("photo_integral") + obj
@@ -388,5 +407,59 @@ public class FragmentRecomm extends BaseFragment {
 			}
 			myListView.setAdapter(adapter);
 		}
+	}
+	
+	private void getIp(){
+		HttpUtils.post("http://ip.taobao.com/service/getIpInfo2.php?ip=myip", new RequestParams(), new TGHttpResponseHandler() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * com.chuannuo.tangguo.net.HCKHttpResponseHandler#onSuccess(int,
+			 * org.apache.http.Header[], java.lang.String)
+			 */
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					String content) {
+				JSONObject obj = null;
+				try {
+					obj = new JSONObject(content);
+					if (obj != null && obj.getInt("code") == 0) {
+						JSONObject data = obj.getJSONObject("data");
+						city = data.getString("region") + data.getString("city");
+						ip = data.getString("ip");
+						isp = data.getString("isp");
+						
+						editor.putString(Constant.IP, ip);
+						editor.putString(Constant.ISP, isp);
+						editor.putString(Constant.CITY, city);
+						editor.commit();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally{
+					Message msg = mHandler.obtainMessage();
+					msg.what = 2;
+					mHandler.sendMessage(msg);
+				}
+
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * com.chuannuo.tangguo.net.HCKHttpResponseHandler#onFailure(java
+			 * .lang.Throwable, java.lang.String)
+			 */
+			@Override
+			public void onFailure(Throwable error, String content) {
+				Message msg = mHandler.obtainMessage();
+				msg.what = 2;
+				mHandler.sendMessage(msg);
+			}
+		});
 	}
 }

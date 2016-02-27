@@ -217,6 +217,7 @@ public class FragmentDepth extends BaseFragment{
 														appInfo.setPhoto_integral((int)(obj.getInt("photo_integral")*appInfo.getVcPrice()));
 														appInfo.setPhoto_status(obj.getInt("photo_status"));
 														appInfo.setIs_photo_task(obj.getInt("is_photo_task"));
+														appInfo.setPhoto_remarks(childObj.getString("photo_remarks"));
 
 														String fileUrl = childObj
 																.getString("file");
@@ -252,10 +253,16 @@ public class FragmentDepth extends BaseFragment{
 													appInfo.setIsAddIntegral(obj
 															.getInt("is_add_integral"));
 													appInfo.setSign(true);
-													if ((appInfo.getIsAddIntegral() == 0 && appInfo.getScore()>0)
-													|| isSignTime(obj) ||(appInfo.getIs_photo_task() == 1 && 
-															appInfo.getPhoto_status()==0)) {
+													if(isSignTime(obj)){
+														appInfo.setSignTime(true);
+													}
+													
+													if (appInfo.getIs_photo_task() != 1) {
 														depthList.add(appInfo);
+													}else{
+														if(appInfo.getIs_photo() == 0 || appInfo.getPhoto_status() == 2){
+															depthList.add(appInfo);
+														}
 													}
 
 												}

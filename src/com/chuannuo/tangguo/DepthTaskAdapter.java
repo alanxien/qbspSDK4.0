@@ -51,7 +51,7 @@ import com.chuannuo.tangguo.androidprocess.AndroidAppProcessLoader;
 import com.chuannuo.tangguo.androidprocess.Listener;
 import com.chuannuo.tangguo.listener.ResponseStateListener;
 
-public class DepthTaskAdapter extends BaseAdapter implements Listener{
+public class DepthTaskAdapter extends BaseAdapter implements Listener {
 
 	public static String TAG = "DepthTaskAdapter";
 
@@ -74,7 +74,8 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 	private TextView app_sign_rule; // 签到规则(隔几天才能签到，签到几次完成任务)
 	private TextView app_sign; // 签到按钮
 	private TextView app_sign_times; // 签到次数
-	
+	private TextView alert;
+
 	private List<AndroidAppProcess> aliList;
 	private int count = 0;
 
@@ -123,6 +124,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 			holder.app_sign_rule = app_sign_rule;
 			holder.app_sign = app_sign;
 			holder.app_sign_times = app_sign_times;
+			holder.alert = alert;
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -135,6 +137,29 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 				+ this.infoList.get(position).getSign_times() + "");
 		String url = this.infoList.get(position).getIcon();
 		holder.app_icon.setTag(url);
+
+		if ((this.infoList.get(position).getIsAddIntegral() == 0 && this.infoList.get(position).getScore() > 0)
+				|| this.infoList.get(position).isSignTime()
+				|| (this.infoList.get(position).getIs_photo_task() == 1 && this.infoList.get(position)
+						.getPhoto_status() == 0)) {
+			holder.app_sign.setBackgroundColor(Color
+					.parseColor(Constant.ColorValues.BTN_NORMAL_COLOR));
+			if(this.infoList.get(position).getIs_photo_task() == 1 && this.infoList.get(position)
+					.getPhoto_status() == 0){
+				holder.alert.setText("上传图片，完成任务");
+				holder.app_sign.setText("上传");
+			}else{
+				holder.alert.setText("继续签到，完成任务");
+				holder.app_sign.setText("签到");
+			}
+			
+		} else {
+			holder.app_sign.setBackgroundColor(Color
+					.parseColor(Constant.ColorValues.DIVIDER_COLOR));
+			holder.alert.setText("还没到签到时间");
+			holder.app_sign.setText("签到");
+		}
+
 		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(url,
 				new ImageCallback() {
 					public void imageLoaded(Drawable imageDrawable,
@@ -168,38 +193,46 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 						DepthTaskAdapter.position = position;
 						doStartApplicationWithPackageName(infoList
 								.get(position).getPackage_name().trim());
-						
-						timer = new Timer();
 
-						timer.schedule(new TimerTask() {
+						if ((infoList.get(position).getIsAddIntegral() == 0 && infoList.get(position).getScore() > 0)
+								|| infoList.get(position).isSignTime()
+								|| (infoList.get(position).getIs_photo_task() == 1 && infoList.get(position)
+										.getPhoto_status() == 0)) {
+							
+							timer = new Timer();
 
-							@Override
-							public void run() {
-								new AndroidAppProcessLoader(context, DepthTaskAdapter.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-							}
-						}, 10000, 30000);
+							timer.schedule(new TimerTask() {
 
-//						new Handler().postDelayed(new Runnable() {
-//
-//							@Override
-//							public void run() {
-//								if (isTopActivity(infoList.get(position)
-//										.getPackage_name())) {
-//									Message msg = mHandler.obtainMessage(1,
-//											infoList.get(position));
-//									msg.arg1 = infoList.get(position)
-//											.getSign_rules();
-//									msg.arg2 = infoList.get(position)
-//											.getIsAddIntegral();
-//									mHandler.sendMessage(msg);
-//								} else {
-//									Message msg = mHandler.obtainMessage();
-//									msg.what = 2;
-//									mHandler.sendMessage(msg);
-//								}
-//							}
-//
-//						}, 3*60 * 1000);
+								@Override
+								public void run() {
+									new AndroidAppProcessLoader(context,
+											DepthTaskAdapter.this)
+											.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+								}
+							}, 10000, 30000);
+						}
+
+						// new Handler().postDelayed(new Runnable() {
+						//
+						// @Override
+						// public void run() {
+						// if (isTopActivity(infoList.get(position)
+						// .getPackage_name())) {
+						// Message msg = mHandler.obtainMessage(1,
+						// infoList.get(position));
+						// msg.arg1 = infoList.get(position)
+						// .getSign_rules();
+						// msg.arg2 = infoList.get(position)
+						// .getIsAddIntegral();
+						// mHandler.sendMessage(msg);
+						// } else {
+						// Message msg = mHandler.obtainMessage();
+						// msg.what = 2;
+						// mHandler.sendMessage(msg);
+						// }
+						// }
+						//
+						// }, 3*60 * 1000);
 					}
 
 				} else {
@@ -226,8 +259,8 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 		relativeLayout.setPadding(0, 10, 0, 10);
 
 		imageView = new ImageView(context);
-		RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(120,
-				120);
+		RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(130,
+				130);
 		lp1.setMargins(10, 0, 10, 10);
 		imageView.setLayoutParams(lp1);
 		imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(context,
@@ -237,7 +270,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 		linearLayout = new LinearLayout(context);
 		RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		lp2.leftMargin = 140;
+		lp2.leftMargin = 150;
 		linearLayout.setOrientation(LinearLayout.VERTICAL);
 		linearLayout.setLayoutParams(lp2);
 		linearLayout.setId(Constant.IDValues.LL1);
@@ -245,6 +278,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 		app_name = new TextView(context);
 		LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(400,
 				LayoutParams.WRAP_CONTENT);
+		lp3.leftMargin=10;
 		app_name.setLayoutParams(lp3);
 		app_name.setTextSize(15);
 		app_name.setTextColor(Color
@@ -261,10 +295,24 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 		app_sign_times.setTextSize(15);
 		app_sign_times.setTextColor(Color
 				.parseColor(Constant.ColorValues.SIZE_COLOR));
-		app_sign_times.setText("大小：6.8M");
+		app_sign_times.setText("0");
 		app_sign_times.setEllipsize(TruncateAt.END);
 		app_sign_times.setSingleLine(true);
 		app_sign_times.setId(Constant.IDValues.SIGN_TIMES);
+		
+		alert = new TextView(context);
+		alert.setLayoutParams(lp4);
+		lp4.leftMargin=20;
+		alert.setTextSize(15);
+		alert.setTextColor(Color
+				.parseColor(Constant.ColorValues.BTN_NORMAL_COLOR));
+		alert.setBackgroundColor(Color
+				.parseColor(Constant.ColorValues.YELLOW_BACK_COLOR));
+		alert.setText("alert");
+		alert.setEllipsize(TruncateAt.END);
+		alert.setSingleLine(true);
+		
+		
 
 		app_sign_rule = new TextView(context);
 		app_sign_rule.setLayoutParams(lp4);
@@ -279,11 +327,12 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 		linearLayout.addView(app_name);
 		linearLayout.addView(app_sign_times);
 		linearLayout.addView(app_sign_rule);
+		linearLayout.addView(alert);
 
 		app_sign = new TextView(context);
 		RelativeLayout.LayoutParams lp5 = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		lp5.rightMargin = 10;
+		lp5.rightMargin = 30;
 		lp5.addRule(RelativeLayout.ALIGN_TOP, Constant.IDValues.LL1);
 		lp5.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		app_sign.setLayoutParams(lp5);
@@ -309,6 +358,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 		public TextView app_sign_rule; // 签到规则(隔几天才能签到，签到几次完成任务)
 		public TextView app_sign; // 签到按钮
 		public TextView app_sign_times; // 签到次数
+		public TextView alert;
 		public TextView tv_is_add_ntegral;// 提示是否已经获取下载积分
 	}
 
@@ -334,6 +384,8 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 						+ "");
 				HttpUtil.setParams("macaddress",
 						PhoneInformation.getMacAddress());
+				HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
+				HttpUtil.setParams("code", pref.getString(Constant.CODE, ""));
 				HttpUtil.setParams("androidid", Secure.getString(
 						context.getContentResolver(), Secure.ANDROID_ID));
 				/*
@@ -495,36 +547,39 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 	 * @param @return
 	 * @return boolean
 	 */
-//	private boolean isTopActivity(String packageName) {
-//		ActivityManager activityManager = (ActivityManager) context
-//				.getSystemService(Context.ACTIVITY_SERVICE);
-//		List<RunningTaskInfo> tasksInfo = new ArrayList<ActivityManager.RunningTaskInfo>();
-//		String s = "";
-//		tasksInfo = activityManager.getRunningTasks(100);
-//		if (tasksInfo.size() > 0) {
-//			Log.i(TAG, "---------------包名-----------" + packageName);
-//			// 应用程序位于堆栈的顶层
-//			s = tasksInfo.get(0).topActivity.getPackageName();
-//		}
-//
-//		if (packageName.equals(s)) {
-//			Log.i(TAG, packageName);
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	private String[] getActivePackages(ActivityManager mActivityManager) {
-//		final Set<String> activePackages = new HashSet<String>();
-//		final List<ActivityManager.RunningAppProcessInfo> processInfos = mActivityManager
-//				.getRunningAppProcesses();
-//		for (ActivityManager.RunningAppProcessInfo processInfo : processInfos) {
-//			if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-//				activePackages.addAll(Arrays.asList(processInfo.pkgList));
-//			}
-//		}
-//		return activePackages.toArray(new String[activePackages.size()]);
-//	}
+	// private boolean isTopActivity(String packageName) {
+	// ActivityManager activityManager = (ActivityManager) context
+	// .getSystemService(Context.ACTIVITY_SERVICE);
+	// List<RunningTaskInfo> tasksInfo = new
+	// ArrayList<ActivityManager.RunningTaskInfo>();
+	// String s = "";
+	// tasksInfo = activityManager.getRunningTasks(100);
+	// if (tasksInfo.size() > 0) {
+	// Log.i(TAG, "---------------包名-----------" + packageName);
+	// // 应用程序位于堆栈的顶层
+	// s = tasksInfo.get(0).topActivity.getPackageName();
+	// }
+	//
+	// if (packageName.equals(s)) {
+	// Log.i(TAG, packageName);
+	// return true;
+	// }
+	// return false;
+	// }
+	//
+	// private String[] getActivePackages(ActivityManager mActivityManager) {
+	// final Set<String> activePackages = new HashSet<String>();
+	// final List<ActivityManager.RunningAppProcessInfo> processInfos =
+	// mActivityManager
+	// .getRunningAppProcesses();
+	// for (ActivityManager.RunningAppProcessInfo processInfo : processInfos) {
+	// if (processInfo.importance ==
+	// ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+	// activePackages.addAll(Arrays.asList(processInfo.pkgList));
+	// }
+	// }
+	// return activePackages.toArray(new String[activePackages.size()]);
+	// }
 
 	/**
 	 * @author alan.xie
@@ -567,69 +622,69 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener{
 		public void onSignClickListener(AppInfo appInfo);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.chuannuo.tangguo.androidprocess.Listener#onComplete(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.chuannuo.tangguo.androidprocess.Listener#onComplete(java.util.List)
 	 */
 	@Override
 	public void onComplete(List<AndroidAppProcess> processes) {
-		if(aliList == null){
+		if (aliList == null) {
 			aliList = new ArrayList<AndroidAppProcess>();
-		}else{
+		} else {
 			aliList.clear();
 		}
 		int size = processes.size();
 		AndroidAppProcess aProcess;
 		count++;
-		for(int i=0;i<size;i++){
+		for (int i = 0; i < size; i++) {
 			aProcess = processes.get(i);
-			if(aProcess.getPackageName() != null && aProcess.getPackageName().equals(infoList
-					.get(position).getPackage_name().trim())){
+			if (aProcess.getPackageName() != null
+					&& aProcess.getPackageName().equals(
+							infoList.get(position).getPackage_name().trim())) {
 				aliList.add(aProcess);
 			}
 		}
-		
-		int l =aliList.size();
-		if(l==0){
-			count = 0;
-			timer.cancel();
-			Toast.makeText(context, "体验失败", Toast.LENGTH_SHORT).show();
+
+		int l = aliList.size();
+		if (l == 0) {
 			Message msg = mHandler.obtainMessage();
 			msg.what = 2;
 			mHandler.sendMessage(msg);
-			//体验失败
-		}else {
+			// 体验失败
+		} else {
 			Boolean isFg = false;
-			for(int i=0; i<l;i++){
-				if(aliList.get(i).foreground){
+			for (int i = 0; i < l; i++) {
+				if (aliList.get(i).foreground) {
 					isFg = true;
 				}
 			}
-			
-			if(isFg){
-				if(count == 3){
-					Toast.makeText(context, "您已经体验了1分钟，体验2分钟！即可获得积分！", Toast.LENGTH_SHORT).show();
-				}else if(count == 5){
-					//体验成功
+
+			if (isFg) {
+				if (count == 3) {
+					Toast.makeText(context, "您已经体验了1分钟，体验2分钟！即可获得积分！",
+							Toast.LENGTH_SHORT).show();
+				} else if (count == 5) {
+					// 体验成功
 					timer.cancel();
 					Message msg = mHandler.obtainMessage(1,
 							infoList.get(position));
-					msg.arg1 = infoList.get(position)
-							.getSign_rules();
-					msg.arg2 = infoList.get(position)
-							.getIsAddIntegral();
+					msg.arg1 = infoList.get(position).getSign_rules();
+					msg.arg2 = infoList.get(position).getIsAddIntegral();
 					mHandler.sendMessage(msg);
 				}
-			}else{
-				//体验失败
-				Toast.makeText(context, "签到失败", Toast.LENGTH_SHORT).show();
-				count=0;
-				timer.cancel();
-				
+			} else {
+				// 体验失败
 				Message msg = mHandler.obtainMessage();
 				msg.what = 2;
 				mHandler.sendMessage(msg);
 			}
 		}
 		
+		if(count >= 5){
+			timer.cancel();
+			count=0;
+		}
 	}
 }

@@ -14,7 +14,7 @@ public class AppInfo implements Serializable{
 	public String title;		 //app名称
 	public String price;		 //价格
 	public String h5_big_url;    //大图
-	public int click_type;		 //类型1:跳到网站 ;2:展示大图片;3:打电话; 4:发短信;5:发邮件;6:定位;7:视广告点击效果类型的图标地址，，默认为8，8是下载
+	public int clickType;		 //类型1:跳到网站 ;2:展示大图片;3:打电话; 4:发短信;5:发邮件;6:定位;7:视广告点击效果类型的图标地址，，默认为8，8是下载
 	public int b_type;			 //合作模式，1安装，2注册
 	public String name;   		 //资源名称
 	public String icon;			 //图标
@@ -43,8 +43,10 @@ public class AppInfo implements Serializable{
 	private int photo_status;   //图片 审核状态，0未上传，1待审核，2任务成功，3任务失败
 	private int is_photo_task;  //0不支持，1支持
 	private String photo;//客户上传的照片
+	private String  photo_remarks;
 	
 	private boolean isSign = false; //是否是签到任务
+	private boolean isSignTime = false;
 
 	public double getVcPrice() {
 		return vcPrice;
@@ -101,22 +103,16 @@ public class AppInfo implements Serializable{
 		this.h5_big_url = h5_big_url;
 	}
 	public int getClicktype() {
-		return click_type;
+		return clickType;
 	}
 	public void setClicktype(int clicktype) {
-		this.click_type = clicktype;
+		this.clickType = clicktype;
 	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public int getClick_type() {
-		return click_type;
-	}
-	public void setClick_type(int click_type) {
-		this.click_type = click_type;
 	}
 	public int getB_type() {
 		return b_type;
@@ -132,6 +128,12 @@ public class AppInfo implements Serializable{
 	}
 	public String getIcon() {
 		return icon;
+	}
+	public boolean isSignTime() {
+		return isSignTime;
+	}
+	public void setSignTime(boolean isSignTime) {
+		this.isSignTime = isSignTime;
 	}
 	public int getIs_photo() {
 		return is_photo;
@@ -267,6 +269,12 @@ public class AppInfo implements Serializable{
 	}
 	public void setFile(String file) {
 		this.file = file;
+	}
+	public String getPhoto_remarks() {
+		return photo_remarks;
+	}
+	public void setPhoto_remarks(String photo_remarks) {
+		this.photo_remarks = photo_remarks;
 	}
 
 }

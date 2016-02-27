@@ -135,8 +135,8 @@ public class RecommendTaskAdapter extends BaseAdapter {
 		relativeLayout.setPadding(0, 10, 0, 10);
 
 		imageView = new ImageView(context);
-		RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(120,
-				120);
+		RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(130,
+				130);
 		lp1.setMargins(10, 0, 10, 10);
 		imageView.setLayoutParams(lp1);
 		imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(context,
@@ -146,7 +146,7 @@ public class RecommendTaskAdapter extends BaseAdapter {
 		linearLayout = new LinearLayout(context);
 		RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		lp2.leftMargin = 140;
+		lp2.leftMargin = 150;
 		linearLayout.setOrientation(LinearLayout.VERTICAL);
 		linearLayout.setLayoutParams(lp2);
 		linearLayout.setId(Constant.IDValues.LL1);
