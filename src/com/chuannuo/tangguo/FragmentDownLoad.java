@@ -16,6 +16,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -65,6 +66,7 @@ public class FragmentDownLoad extends BaseFragment {
 	private TextView tv_line;
 	private ImageView iv_how;
 	private TextView tv_how;
+	private TextView tv_screen;
 	private ImageView ivStep1;
 	private ImageView ivStep2;
 	private ImageView ivStep3;
@@ -185,17 +187,30 @@ public class FragmentDownLoad extends BaseFragment {
 		tv_how.setText("如何做");
 		tv_how.setTextColor(Color.parseColor(Constant.ColorValues.HOW_TO_DO));
 		tv_how.setTextSize(17);
-
+		
 		tv_total_score = new TextView(getActivity());
 		tv_total_score.setLayoutParams(lp6);
 		tv_total_score.setTextColor(Color
 				.parseColor(Constant.ColorValues.GREEN_THEME));
 		tv_total_score.setText("");
 		tv_total_score.setId(Constant.IDValues.D_SCORE);
-
+		
 		linearLayout5.addView(iv_how);
 		linearLayout5.addView(tv_how);
 		linearLayout5.addView(tv_total_score);
+		
+		tv_screen = new TextView(getActivity());
+		lp6.leftMargin = 50;
+		tv_screen.setLayoutParams(lp6);
+		PhoneInformation.initTelephonyManager(getActivity());
+		String html ="<a href='"+Constant.URL.SCREEN_SHOT_RUL+PhoneInformation.getMachineType()+"手机怎么截图"+"'>不知道怎么截图？</a>";
+		tv_screen.setText(Html.fromHtml(html));
+		tv_screen.setTextColor(Color.parseColor(Constant.ColorValues.GREEN_THEME));
+		tv_screen.setTextSize(15);
+		tv_screen.setAutoLinkMask(Linkify.ALL); 
+		tv_screen.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		linearLayout5.addView(tv_screen);
 		linearLayout4.addView(tv_line);
 		linearLayout4.addView(linearLayout5);
 
@@ -463,6 +478,7 @@ public class FragmentDownLoad extends BaseFragment {
 							+ appInfo.getTextName() + "，（注意只有一次上传机会，请严格按照要求上传）");
 					rl_upload.setVisibility(View.VISIBLE);
 					iv_upload.setVisibility(View.VISIBLE);
+					tv_screen.setVisibility(View.VISIBLE);
 					editor.putBoolean(Constant.IS_SIGN, false);
 					editor.commit();
 					loadImage();
@@ -479,15 +495,15 @@ public class FragmentDownLoad extends BaseFragment {
 					if (appInfo.getScore() > 0) {
 						if(appInfo.getAlert()==null||appInfo.getAlert().equals("")){
 							str = "试玩3分钟可获得" + appInfo.getScore()
-									+ appInfo.getTextName();
+									+ appInfo.getTextName()+"，";
 						}else{
 							str = appInfo.getAlert() + appInfo.getScore()
-									+ appInfo.getTextName();
+									+ appInfo.getTextName()+"，";
 						}
 						
 					}
 					if (appInfo.getIs_photo() == 1 || appInfo.isSign()) {
-						tv_tips1.setText(str + ",请到未完成任务列表中,按下面示例图截图上传即可获得 "
+						tv_tips1.setText(str + "下载安装成功后，请到未完成任务列表中，按下面示例图截图上传即可获得 "
 								+ appInfo.getPhoto_integral()
 								+ appInfo.getTextName()
 								+ "，（注意只有一次上传机会，请严格按照要求上传）");
@@ -497,11 +513,13 @@ public class FragmentDownLoad extends BaseFragment {
 						} else {
 							iv_upload.setVisibility(View.GONE);
 						}
+						tv_screen.setVisibility(View.VISIBLE);
 						loadImage();
 					} else {
 						tv_tips1.setText(str);
 						rl_upload.setVisibility(View.GONE);
 						iv_upload.setVisibility(View.GONE);
+						tv_screen.setVisibility(View.GONE);
 					}
 
 					tv_tips2.setText("安装完成后，请到未完成任务列表中，继续签到，每次签到即可获得" + 10

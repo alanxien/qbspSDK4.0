@@ -65,6 +65,7 @@ public class Constant {
 	public class URL{
 		
 		public static final String ROOT_URL = "http://apk.jiequbao.com";
+		public static final String SCREEN_SHOT_RUL = "http://m.baidu.com/s?word=";
 		
 		/** 
 		* @Fields BASE_URL : 网站根目录 

@@ -825,7 +825,6 @@ public class DownloadService extends Service implements Listener{
 		}
 		
 		if(count >=7){
-			Toast.makeText(this.context, "监控退出！", Toast.LENGTH_SHORT).show();
 			timer.cancel();
 			count=0;
 		}
