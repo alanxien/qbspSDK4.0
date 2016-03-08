@@ -207,7 +207,6 @@ public class FragmentDownLoad extends BaseFragment {
 		tv_screen.setText(Html.fromHtml(html));
 		tv_screen.setTextColor(Color.parseColor(Constant.ColorValues.GREEN_THEME));
 		tv_screen.setTextSize(15);
-		tv_screen.setAutoLinkMask(Linkify.ALL); 
 		tv_screen.setMovementMethod(LinkMovementMethod.getInstance());
 		
 		linearLayout5.addView(tv_screen);
