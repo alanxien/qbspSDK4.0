@@ -9,10 +9,13 @@
 package com.chuannuo.tangguo.task;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -42,7 +45,9 @@ public class ReportTask extends AsyncTask<Object, Object, Object> {
 		responseListener = (ReportListener) params[1];
 		try {
 			HttpPost httpRequest = new HttpPost(params[0].toString());
-			HttpEntity httpentity = new UrlEncodedFormEntity(HttpUtil.paramsl, Constant.CODING);
+			List<NameValuePair> list = new ArrayList<NameValuePair>();
+			list.addAll(HttpUtil.paramsl);
+			HttpEntity httpentity = new UrlEncodedFormEntity(list, Constant.CODING);
 			httpRequest.setEntity(httpentity);
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpResponse httpResponse = httpClient.execute(httpRequest);

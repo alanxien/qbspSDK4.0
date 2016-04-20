@@ -230,19 +230,34 @@ public class FragmentRecomm extends BaseFragment {
 							msg.what = 1;
 							mHandler.sendMessage(msg);
 						} else {
-							Toast.makeText(getActivity(), "获取数据失败",
-									Toast.LENGTH_SHORT).show();
-							progressDialog.dismiss();
+							if(getActivity() != null){
+								Toast.makeText(getActivity(), "获取数据失败",
+										Toast.LENGTH_SHORT).show();
+							}
+							
+							if (progressDialog != null) {
+								progressDialog.dismiss();
+							}
 						}
 					} catch (Exception e) {
-						Toast.makeText(getActivity(), "获取数据失败！",
-								Toast.LENGTH_SHORT).show();
-						progressDialog.dismiss();
+						if(getActivity() != null){
+							Toast.makeText(getActivity(), "获取数据失败！",
+									Toast.LENGTH_SHORT).show();
+						}
+						
+						if (progressDialog != null) {
+							progressDialog.dismiss();
+						}
 					}
 				} else {
-					Toast.makeText(getActivity(), "获取数据失败！", Toast.LENGTH_SHORT)
-							.show();
-					progressDialog.dismiss();
+					if(getActivity() != null){
+						Toast.makeText(getActivity(), "获取数据失败！", Toast.LENGTH_SHORT)
+						.show();
+					}
+					
+					if (progressDialog != null) {
+						progressDialog.dismiss();
+					}
 				}
 			}
 		});
@@ -250,7 +265,7 @@ public class FragmentRecomm extends BaseFragment {
 
 	private void initData() {
 
-		if (recommList.size() <= 0) {
+		if (recommList!=null && recommList.size() <= 0) {
 			HttpUtil.setParams("app_id", pref.getString(Constant.APP_ID, "0"));
 			HttpUtil.setParams("channel_id", TangGuoWall.APPID);
 			HttpUtil.setParams("ip", pref.getString(Constant.IP, "0.0.0.0"));
@@ -367,7 +382,10 @@ public class FragmentRecomm extends BaseFragment {
 													appInfo.setTotalScore((int) ((obj
 															.getInt("score")+obj.getInt("photo_integral") + obj
 															.getInt("sign_number") * 10) * score));
-													recommList.add(appInfo);
+													if(recommList != null){
+														recommList.add(appInfo);
+													}
+													
 												}
 											}
 										}
@@ -376,29 +394,44 @@ public class FragmentRecomm extends BaseFragment {
 										msg.what = 3;
 										mHandler.sendMessage(msg);
 									} else {
-										Toast.makeText(getActivity(), "获取数据失败",
-												Toast.LENGTH_SHORT).show();
-										progressDialog.dismiss();
+										if(getActivity() != null){
+											Toast.makeText(getActivity(), "获取数据失败",
+													Toast.LENGTH_SHORT).show();
+										}
+										if(progressDialog != null){
+											progressDialog.dismiss();
+										}
+										
 									}
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								} finally {
-									progressDialog.dismiss();
+									if(progressDialog != null){
+										progressDialog.dismiss();
+									}
 								}
 
 							} else {
-								Toast.makeText(getActivity(), "获取数据失败！",
-										Toast.LENGTH_SHORT).show();
-								progressDialog.dismiss();
+								if(getActivity() != null){
+									
+									Toast.makeText(getActivity(), "获取数据失败！",
+											Toast.LENGTH_SHORT).show();
+								}
+								if(progressDialog != null){
+									progressDialog.dismiss();
+								}
 							}
 						}
 
 					});
 		} else {
-			if (progressDialog.isShowing()) {
-				progressDialog.dismiss();
+			if(progressDialog != null){
+				if (progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
 			}
+			
 			if (null == adapter) {
 				adapter = new RecommendTaskAdapter(getActivity(), recommList,
 						myListView);

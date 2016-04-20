@@ -65,7 +65,9 @@ public class HttpUtil {
 	public static Object doHttp(Object... params){
 		try {
 			HttpPost httpRequest = new HttpPost(params[0].toString());
-			HttpEntity httpentity = new UrlEncodedFormEntity(paramsl, Constant.CODING);
+			List<NameValuePair> list = new ArrayList<NameValuePair>();
+			list.addAll(paramsl);
+			HttpEntity httpentity = new UrlEncodedFormEntity(list, Constant.CODING);
 			httpRequest.setEntity(httpentity);
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpResponse httpResponse = httpClient.execute(httpRequest);

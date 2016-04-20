@@ -552,9 +552,9 @@ public class DownloadService extends Service implements Listener{
 						});
 				break;
 			case 2:
-				TangGuoWall.tangGuoWallListener.onAddPoint(
-						Constant.ACCESS_FAILURE, appInfo.getTitle(),
-						appInfo.getScore());
+//				TangGuoWall.tangGuoWallListener.onAddPoint(
+//						Constant.ACCESS_FAILURE, appInfo.getTitle(),
+//						appInfo.getScore());
 				// 停止服务
 				downloadNotificationManager.cancelAll();
 				stopSelf();

@@ -482,8 +482,8 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 				}
 				break;
 			case 2:
-				TangGuoWall.tangGuoWallListener.onSign(Constant.ACCESS_FAILURE,
-						"", 0);
+//				TangGuoWall.tangGuoWallListener.onSign(Constant.ACCESS_FAILURE,
+//						"", 0);
 				break;
 			default:
 				break;

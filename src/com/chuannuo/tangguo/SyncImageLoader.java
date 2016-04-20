@@ -64,7 +64,13 @@ public class SyncImageLoader {
             } catch (IOException e) {  
                 e.printStackTrace();  
             }  
-            Drawable d = Drawable.createFromStream(i, "src");  
+            Drawable d = Drawable.createFromStream(i, "src"); 
+            try {
+				i.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
             return d;  
         }  
         
