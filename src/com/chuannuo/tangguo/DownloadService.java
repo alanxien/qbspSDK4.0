@@ -94,6 +94,9 @@ public class DownloadService extends Service implements Listener{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		context = getApplicationContext();
 		// 获取传值
+		if(intent == null){
+			return 0;
+		}
 		appInfo = (AppInfo) intent.getSerializableExtra(Constant.ITEM);
 		isRepeatDown = intent.getBooleanExtra("isRepeatDown", false);
 		isData = intent.getBooleanExtra("isData", false);

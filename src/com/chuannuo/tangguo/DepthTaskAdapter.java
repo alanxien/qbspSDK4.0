@@ -652,11 +652,13 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 			Message msg = mHandler.obtainMessage();
 			msg.what = 2;
 			mHandler.sendMessage(msg);
+			Log.i("DepthTaskAdapter", "count="+count+"--------正在监控。。包名，应用名不一致！");
 			// 体验失败
 		} else {
 			Boolean isFg = false;
 			for (int i = 0; i < l; i++) {
 				if (aliList.get(i).foreground) {
+					Log.i("DepthTaskAdapter", "count="+count+"--------正在监控。。app前台运行！");
 					isFg = true;
 				}
 			}
@@ -668,6 +670,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 				} else if (count == 5) {
 					// 体验成功
 					timer.cancel();
+					Log.i("DepthTaskAdapter", "count="+count+"--------体验成功，正在执行网络操作！");
 					Message msg = mHandler.obtainMessage(1,
 							infoList.get(position));
 					msg.arg1 = infoList.get(position).getSign_rules();
@@ -675,6 +678,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 					mHandler.sendMessage(msg);
 				}
 			} else {
+				Log.i("DepthTaskAdapter", "count="+count+"--------正在监控。。app后台运行！");
 				// 体验失败
 				Message msg = mHandler.obtainMessage();
 				msg.what = 2;
@@ -683,6 +687,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 		}
 		
 		if(count >= 5){
+			Log.i("DepthTaskAdapter", "count="+count+"--------监控停止");
 			timer.cancel();
 			count=0;
 		}
