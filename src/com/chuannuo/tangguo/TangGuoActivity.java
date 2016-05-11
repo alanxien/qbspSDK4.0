@@ -829,9 +829,11 @@ public class TangGuoActivity extends FragmentActivity implements
 				JSONObject obj = null;
 				try {
 					obj = new JSONObject(content);
-					if (obj.getString("code").equals("1")) {
+					if (obj!=null && obj.getString("code").equals("1")) {
 						//回调
-						TangGuoWall.tangGuoWallListener.onUploadImgs(dataList);
+						if(TangGuoWall.tangGuoWallListener != null){
+							TangGuoWall.tangGuoWallListener.onUploadImgs(dataList);
+						}
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
