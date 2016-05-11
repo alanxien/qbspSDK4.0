@@ -776,7 +776,7 @@ public class TangGuoActivity extends FragmentActivity implements
 		int quality = 100;
 		bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
 		System.out.println(baos.toByteArray().length);
-		while (baos.toByteArray().length > 45 * 1024) {
+		while (baos.toByteArray().length > 45 * 1024 && quality>0) {
 			baos.reset();
 			bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
 			quality -= 20;
