@@ -98,6 +98,9 @@ public class DownloadService extends Service implements Listener{
 			return 0;
 		}
 		appInfo = (AppInfo) intent.getSerializableExtra(Constant.ITEM);
+		if(appInfo == null){
+			return 0;
+		}
 		isRepeatDown = intent.getBooleanExtra("isRepeatDown", false);
 		isData = intent.getBooleanExtra("isData", false);
 		// 创建文件
