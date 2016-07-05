@@ -9,6 +9,8 @@
 package com.chuannuo.tangguo;
 
 
+import com.chuannuo.tangguo.imageLoader.ImageLoader;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,6 +41,7 @@ public class BaseFragment extends Fragment {
 	
 	protected SharedPreferences pref;
 	protected Editor editor;
+	protected ImageLoader mImageLoader;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class BaseFragment extends Fragment {
 		if(null == editor){
 			editor = pref.edit();
 		}
+		mImageLoader = ImageLoader.getInstance();
 		super.onCreate(savedInstanceState);
 	}
 	

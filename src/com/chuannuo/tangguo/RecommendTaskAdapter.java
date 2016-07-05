@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.chuannuo.tangguo.SyncImageLoader.ImageCallback;
+import com.chuannuo.tangguo.imageLoader.ImageLoader;
 
 public class RecommendTaskAdapter extends BaseAdapter {
 
@@ -41,12 +41,14 @@ public class RecommendTaskAdapter extends BaseAdapter {
 	private TextView tvAlert;
 
 	private ListView mListView;
+	private ImageLoader mImageLoader;
 
 	public RecommendTaskAdapter(Context context, ArrayList<AppInfo> list,
 			ListView listView) {
 		this.context = context;
 		this.infoList = list;
 		this.mListView = listView;
+		mImageLoader = ImageLoader.getInstance();
 	}
 
 	@Override
@@ -101,22 +103,23 @@ public class RecommendTaskAdapter extends BaseAdapter {
 		holder.app_size.setText(appInfo.getResource_size() + "M");
 		String url = this.infoList.get(position).getIcon();
 		holder.app_icon.setTag(url);
-		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(url,
-				new ImageCallback() {
-					public void imageLoaded(Drawable imageDrawable,
-							String imageUrl) {
-						ImageView imageViewByTag = (ImageView) mListView
-								.findViewWithTag(imageUrl);
-						if (imageViewByTag != null) {
-							imageViewByTag.setImageDrawable(imageDrawable);
-						}
-					}
-				});
-		if (cachedImage == null) {
-			holder.app_icon.setImageDrawable(TangGuoActivity.icon);
-		} else {
-			holder.app_icon.setImageDrawable(cachedImage);
-		}
+//		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(url,
+//				new ImageCallback() {
+//					public void imageLoaded(Drawable imageDrawable,
+//							String imageUrl) {
+//						ImageView imageViewByTag = (ImageView) mListView
+//								.findViewWithTag(imageUrl);
+//						if (imageViewByTag != null) {
+//							imageViewByTag.setImageDrawable(imageDrawable);
+//						}
+//					}
+//				});
+//		if (cachedImage == null) {
+//			holder.app_icon.setImageDrawable(TangGuoActivity.icon);
+//		} else {
+//			holder.app_icon.setImageDrawable(cachedImage);
+//		}
+		mImageLoader.loadImage(url, holder.app_icon, true,false);
 		return convertView;
 	}
 

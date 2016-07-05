@@ -9,6 +9,7 @@
 package com.chuannuo.tangguo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,8 +37,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import com.chuannuo.tangguo.SyncImageLoader.ImageCallback;
 
 /**
  * TODO<请描述这个类是干什么的>
@@ -75,27 +75,21 @@ public class FragmentDownLoad extends BaseFragment {
 	private TextView tv_tips2;
 	private TextView tv_tips3;
 	private TextView tv_tips4;
-	private RelativeLayout rl_upload; // 示例图
-	private ImageView iv_example;
-	public ImageView iv_upload;
+	public RelativeLayout rl_upload; sfsfdfdsfs// 上传图
 
 	public TextView tv_desc;
 	private TextView tv_downLoad;
 	private TextView tv_total_score;
-	private Drawable cachedImage;
-	private Drawable cachedImage1;
 	public AppInfo appInfo;
 	public PopupWindow popupWindow;
-	
-	private ListView myListView;
-	private ArrayList<String> sList;
-	private ArrayAdapter<String> mAdapter;
+
+	private HorizontalScrollView imgsScrollView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		initView();
-		initData(); 
+		initData();
 		return view;
 	}
 
@@ -187,28 +181,31 @@ public class FragmentDownLoad extends BaseFragment {
 		tv_how.setText("如何做");
 		tv_how.setTextColor(Color.parseColor(Constant.ColorValues.HOW_TO_DO));
 		tv_how.setTextSize(17);
-		
+
 		tv_total_score = new TextView(getActivity());
 		tv_total_score.setLayoutParams(lp6);
 		tv_total_score.setTextColor(Color
 				.parseColor(Constant.ColorValues.GREEN_THEME));
 		tv_total_score.setText("");
 		tv_total_score.setId(Constant.IDValues.D_SCORE);
-		
+
 		linearLayout5.addView(iv_how);
 		linearLayout5.addView(tv_how);
 		linearLayout5.addView(tv_total_score);
-		
+
 		tv_screen = new TextView(getActivity());
 		lp6.leftMargin = 50;
 		tv_screen.setLayoutParams(lp6);
 		PhoneInformation.initTelephonyManager(getActivity());
-		String html ="<a href='"+Constant.URL.SCREEN_SHOT_RUL+PhoneInformation.getMachineType()+"手机怎么截图"+"'>不知道怎么截图？</a>";
+		String html = "<a href='" + Constant.URL.SCREEN_SHOT_RUL
+				+ PhoneInformation.getMachineType() + "手机怎么截图"
+				+ "'>不知道怎么截图？</a>";
 		tv_screen.setText(Html.fromHtml(html));
-		tv_screen.setTextColor(Color.parseColor(Constant.ColorValues.GREEN_THEME));
+		tv_screen.setTextColor(Color
+				.parseColor(Constant.ColorValues.GREEN_THEME));
 		tv_screen.setTextSize(15);
 		tv_screen.setMovementMethod(LinkMovementMethod.getInstance());
-		
+
 		linearLayout5.addView(tv_screen);
 		linearLayout4.addView(tv_line);
 		linearLayout4.addView(linearLayout5);
@@ -240,9 +237,7 @@ public class FragmentDownLoad extends BaseFragment {
 		 * 图片上传
 		 */
 		rl_upload = new RelativeLayout(getActivity());
-		iv_example = new ImageView(getActivity());
-		iv_upload = new ImageView(getActivity());
-		TextView tv_example = new TextView(getActivity());
+		ImageView iv_upload = new ImageView(getActivity());
 
 		LinearLayout.LayoutParams lpUpload = new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -250,8 +245,6 @@ public class FragmentDownLoad extends BaseFragment {
 				1);
 		LinearLayout.LayoutParams ivlp = new LinearLayout.LayoutParams(0, 300,
 				1);
-		RelativeLayout.LayoutParams ivelp = new RelativeLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, 300);
 		RelativeLayout.LayoutParams tvlp = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
@@ -264,34 +257,13 @@ public class FragmentDownLoad extends BaseFragment {
 				.parseColor(Constant.ColorValues.UPLOAD_IMG_BCAK));
 		rl_upload.setLayoutParams(rllp);
 
-		ivlp.setMargins(20, 0, 0, 0);
-		iv_example.setLayoutParams(ivelp);
 		iv_upload.setLayoutParams(ivlp);
-
-		tv_example.setLayoutParams(tvlp);
-		tv_example.setText("示例图");
-		tv_example.setTextColor(Color
-				.parseColor(Constant.ColorValues.LIGHT_RED));
-		tv_example.setTextSize(20);
-		tv_example.setTypeface(Typeface.DEFAULT_BOLD);
 
 		iv_upload.setBackgroundColor(Color
 				.parseColor(Constant.ColorValues.UPLOAD_IMG_BCAK));
 		iv_upload.setImageBitmap(ResourceUtil.getImageFromAssetsFile(
 				getActivity(), "upload.png"));
 		iv_upload.setClickable(true);
-
-		rl_upload.addView(iv_example);
-		rl_upload.addView(tv_example);
-
-		// 查看大图
-		rl_upload.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				viewBigPic();
-			}
-		});
 
 		// 图片上传
 		iv_upload.setOnClickListener(new OnClickListener() {
@@ -338,7 +310,7 @@ public class FragmentDownLoad extends BaseFragment {
 		tv_tips3.setText("每隔2天可签到一次，签到3次任务完成");
 		tv_tips3.setTextSize(16);
 		tv_tips3.setTextColor(Color.parseColor(Constant.ColorValues.LIGHT_RED));
-		
+
 		tv_tips4.setLayoutParams(lp7);
 		tv_tips4.setText("");
 		tv_tips4.setTextSize(16);
@@ -350,20 +322,24 @@ public class FragmentDownLoad extends BaseFragment {
 		linearLayout7.addView(tv_tips2);
 		linearLayout8.addView(ivStep3);
 		linearLayout8.addView(tv_tips3);
-		
+
 		linearLayout4.addView(linearLayout6);
 		linearLayout4.addView(linearLayout7);
 		linearLayout4.addView(linearLayout8);
-		if (appInfo.getClicktype() == 1 || (appInfo.getClicktype() ==8 && appInfo.getIs_photo_task() == 1)){
-			if(appInfo.getPhoto_remarks()!=null && !appInfo.getPhoto_remarks().equals("")){
+		if (appInfo.getClicktype() == 1
+				|| (appInfo.getClicktype() == 8 && appInfo.getIs_photo_task() == 1)) {
+			if (appInfo.getPhoto_remarks() != null
+					&& !appInfo.getPhoto_remarks().equals("")) {
 				tv_tips4.setText(appInfo.getPhoto_remarks());
 				linearLayout10.addView(ivStep4);
 				linearLayout10.addView(tv_tips4);
 				linearLayout4.addView(linearLayout10);
 			}
-			
+
 		}
-		Log.w("FragmentDownLoad", appInfo.getClicktype()+"--"+appInfo.getIs_photo_task()+"--"+appInfo.getPhoto_remarks());
+		Log.w("FragmentDownLoad",
+				appInfo.getClicktype() + "--" + appInfo.getIs_photo_task()
+						+ "--" + appInfo.getPhoto_remarks());
 		linearLayout4.addView(linearLayout9);
 
 		tv_desc = new TextView(getActivity());
@@ -406,14 +382,21 @@ public class FragmentDownLoad extends BaseFragment {
 			}
 		});
 
+		imgsScrollView = new HorizontalScrollView(getActivity());
+		LinearLayout.LayoutParams lpHv = new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, 600);
+		lpHv.setMargins(20, 20, 20, 20);
+		imgsScrollView.setLayoutParams(lpHv);
+		imgsScrollView.setHorizontalScrollBarEnabled(false);
+
 		linearLayout1.addView(linearLayout2);
 		linearLayout1.addView(linearLayout4);
+		linearLayout1.addView(imgsScrollView);
 		linearLayout1.addView(tv_desc);
 		linearLayout1.addView(tv_downLoad);
 
 		scrollView.addView(linearLayout1);
 		view.addView(scrollView);
-
 	}
 
 	/**
@@ -438,10 +421,10 @@ public class FragmentDownLoad extends BaseFragment {
 	 * @return void
 	 * @throws
 	 */
-	protected void viewBigPic() {
-		if (cachedImage1 != null) {
+	protected void viewBigPic(String url) {
+		if (!url.isEmpty()) {
 			ImageView view = new ImageView(getActivity());
-			view.setImageDrawable(cachedImage1);
+			mImageLoader.loadImage(url, view, true, true);
 			popupWindow = new PopupWindow(view, LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT);
 			popupWindow.showAtLocation(this.view, Gravity.CENTER, 0, 0);
@@ -476,48 +459,174 @@ public class FragmentDownLoad extends BaseFragment {
 							+ appInfo.getPhoto_integral()
 							+ appInfo.getTextName() + "，（注意只有一次上传机会，请严格按照要求上传）");
 					rl_upload.setVisibility(View.VISIBLE);
-					iv_upload.setVisibility(View.VISIBLE);
 					tv_screen.setVisibility(View.VISIBLE);
+					imgsScrollView.setVisibility(View.VISIBLE);
 					editor.putBoolean(Constant.IS_SIGN, false);
 					editor.commit();
-					loadImage();
+					// 查看大图
+					rl_upload.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							viewBigPic(appInfo.getH5_big_url());
+						}
+					});
+
+					if (appInfo.getImgsList() != null
+							&& appInfo.getImgsList().size() > 0) {
+						List<String> imgsList = appInfo.getImgsList();
+						int s = imgsList.size();
+						LinearLayout linearLayout = new LinearLayout(
+								getActivity());
+						LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+								LayoutParams.MATCH_PARENT, 600);
+						linearLayout.setLayoutParams(lp);
+
+						for (int i = 0; i < s; i++) {
+							final String url = imgsList.get(i);
+							ImageView imageView = new ImageView(getActivity());
+							imageView.setId(i);
+							imageView.setLayoutParams(lp);
+							imageView.setPadding(15, 0, 15, 0);
+							imageView.setImageDrawable(TangGuoActivity.icon);
+							mImageLoader.loadImage(url, imageView, true, false);
+							linearLayout.addView(imageView);
+							// 查看大图
+							imageView.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									viewBigPic(url);
+								}
+							});
+						}
+						imgsScrollView.addView(linearLayout);
+					} else {
+						LinearLayout linearLayout = new LinearLayout(
+								getActivity());
+						LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+								LayoutParams.MATCH_PARENT, 600);
+						linearLayout.setLayoutParams(lp);
+
+						ImageView imageView = new ImageView(getActivity());
+						imageView.setLayoutParams(lp);
+						imageView.setImageDrawable(TangGuoActivity.icon);
+						mImageLoader.loadImage(appInfo.getH5_big_url(),
+								imageView, true, false);
+						linearLayout.addView(imageView);
+						// 查看大图
+						imageView.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								viewBigPic(appInfo.getH5_big_url());
+							}
+						});
+						imgsScrollView.addView(linearLayout);
+					}
 				} else if (appInfo.getClicktype() == 8) {
-					if(appInfo.isSign()){
+					if (appInfo.isSign()) {
 						tv_downLoad.setVisibility(View.GONE);
 						editor.putBoolean(Constant.IS_SIGN, true);
-					}else{
+					} else {
 						tv_downLoad.setVisibility(View.VISIBLE);
 						editor.putBoolean(Constant.IS_SIGN, false);
 					}
 					editor.commit();
 					String str = "";
 					if (appInfo.getScore() > 0) {
-						if(appInfo.getAlert()==null||appInfo.getAlert().equals("")){
+						if (appInfo.getAlert() == null
+								|| appInfo.getAlert().equals("")) {
 							str = "试玩3分钟可获得" + appInfo.getScore()
-									+ appInfo.getTextName()+"，";
-						}else{
+									+ appInfo.getTextName() + "，";
+						} else {
 							str = appInfo.getAlert() + appInfo.getScore()
-									+ appInfo.getTextName()+"，";
+									+ appInfo.getTextName() + "，";
 						}
-						
+
 					}
 					if (appInfo.getIs_photo() == 1 || appInfo.isSign()) {
-						tv_tips1.setText(str + "下载安装成功后，请到未完成任务列表中，按下面示例图截图上传即可获得 "
+						tv_tips1.setText(str
+								+ "下载安装成功后，请到未完成任务列表中，按下面示例图截图上传即可获得 "
 								+ appInfo.getPhoto_integral()
 								+ appInfo.getTextName()
 								+ "，（注意只有一次上传机会，请严格按照要求上传）");
-						rl_upload.setVisibility(View.VISIBLE);
+						imgsScrollView.setVisibility(View.VISIBLE);
 						if (appInfo.isSign()) {
-							iv_upload.setVisibility(View.VISIBLE);
+							rl_upload.setVisibility(View.VISIBLE);
 						} else {
-							iv_upload.setVisibility(View.GONE);
+							rl_upload.setVisibility(View.GONE);
 						}
 						tv_screen.setVisibility(View.VISIBLE);
-						loadImage();
+						// 查看大图
+						rl_upload.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								viewBigPic(appInfo.getH5_big_url());
+							}
+						});
+
+						if (appInfo.getImgsList() != null
+								&& appInfo.getImgsList().size() > 0) {
+							List<String> imgsList = appInfo.getImgsList();
+							int s = imgsList.size();
+							LinearLayout linearLayout = new LinearLayout(
+									getActivity());
+							LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+									LayoutParams.MATCH_PARENT, 600);
+							linearLayout.setLayoutParams(lp);
+
+							for (int i = 0; i < s; i++) {
+								final String url = imgsList.get(i);
+								ImageView imageView = new ImageView(
+										getActivity());
+								imageView.setId(i);
+								imageView.setLayoutParams(lp);
+								imageView.setPadding(15, 0, 15, 0);
+								imageView
+										.setImageDrawable(TangGuoActivity.icon);
+								mImageLoader.loadImage(url, imageView, true,
+										false);
+								linearLayout.addView(imageView);
+								// 查看大图
+								imageView
+										.setOnClickListener(new OnClickListener() {
+
+											@Override
+											public void onClick(View v) {
+												viewBigPic(url);
+											}
+										});
+							}
+							imgsScrollView.addView(linearLayout);
+						}else {
+							LinearLayout linearLayout = new LinearLayout(
+									getActivity());
+							LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+									LayoutParams.MATCH_PARENT, 600);
+							linearLayout.setLayoutParams(lp);
+
+							ImageView imageView = new ImageView(getActivity());
+							imageView.setLayoutParams(lp);
+							imageView.setImageDrawable(TangGuoActivity.icon);
+							mImageLoader.loadImage(appInfo.getH5_big_url(),
+									imageView, true, false);
+							linearLayout.addView(imageView);
+							// 查看大图
+							imageView.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									viewBigPic(appInfo.getH5_big_url());
+								}
+							});
+							imgsScrollView.addView(linearLayout);
+						}
 					} else {
 						tv_tips1.setText(str);
 						rl_upload.setVisibility(View.GONE);
-						iv_upload.setVisibility(View.GONE);
+						imgsScrollView.setVisibility(View.GONE);
 						tv_screen.setVisibility(View.GONE);
 					}
 
@@ -528,46 +637,13 @@ public class FragmentDownLoad extends BaseFragment {
 							+ "次任务完成");
 				}
 			}
-
-			cachedImage = SyncImageLoader.getInstance().loadDrawable(
-					appInfo.getIcon(), new ImageCallback() {
-						public void imageLoaded(Drawable imageDrawable,
-								String imageUrl) {
-							iv_logo.setImageDrawable(imageDrawable);
-						}
-					});
-			if (cachedImage == null) {
-				iv_logo.setImageBitmap(ResourceUtil.getImageFromAssetsFile(
-						getActivity(), "tangguo.png"));
-			} else {
-				iv_logo.setImageDrawable(cachedImage);
-			}
-
+			mImageLoader.loadImage(appInfo.getIcon(), iv_logo, true, false);
 			tv_app_name.setText(appInfo.getTitle());
 			tv_size.setText(appInfo.getResource_size() + "M");
 			tv_desc.setText(appInfo.getDescription());
 
 		} else {
 			tv_downLoad.setVisibility(View.GONE);
-		}
-	}
-
-	private void loadImage() {
-		// TODO Auto-generated method stub
-		cachedImage1 = SyncImageLoader.getInstance().loadDrawable(
-				appInfo.getH5_big_url(), new ImageCallback() {
-					public void imageLoaded(Drawable imageDrawable,
-							String imageUrl) {
-						iv_example.setImageDrawable(imageDrawable);
-						cachedImage1 = imageDrawable;
-					}
-				});
-		if (cachedImage1 == null) {
-			iv_example.setImageBitmap(ResourceUtil.getImageFromAssetsFile(
-					getActivity(), "tangguo.png"));
-		} else {
-			iv_example.setImageDrawable(cachedImage1);
-
 		}
 	}
 }

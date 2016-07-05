@@ -45,10 +45,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chuannuo.tangguo.SyncImageLoader.ImageCallback;
 import com.chuannuo.tangguo.androidprocess.AndroidAppProcess;
 import com.chuannuo.tangguo.androidprocess.AndroidAppProcessLoader;
 import com.chuannuo.tangguo.androidprocess.Listener;
+import com.chuannuo.tangguo.imageLoader.ImageLoader;
 import com.chuannuo.tangguo.listener.ResponseStateListener;
 
 public class DepthTaskAdapter extends BaseAdapter implements Listener {
@@ -78,6 +78,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 
 	private List<AndroidAppProcess> aliList;
 	private int count = 0;
+	private ImageLoader mImageLoader;
 
 	public DepthTaskAdapter(final Context context, ArrayList<AppInfo> list,
 			ListView listView, SignClickListener mListener) {
@@ -91,6 +92,7 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 			editor = pref.edit();
 		}
 		mListView = listView;
+		mImageLoader = ImageLoader.getInstance();
 		this.mListener = mListener;
 	}
 
@@ -160,22 +162,24 @@ public class DepthTaskAdapter extends BaseAdapter implements Listener {
 			holder.app_sign.setText("签到");
 		}
 
-		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(url,
-				new ImageCallback() {
-					public void imageLoaded(Drawable imageDrawable,
-							String imageUrl) {
-						ImageView imageViewByTag = (ImageView) mListView
-								.findViewWithTag(imageUrl);
-						if (imageViewByTag != null) {
-							imageViewByTag.setImageDrawable(imageDrawable);
-						}
-					}
-				});
-		if (cachedImage == null) {
-			holder.app_icon.setImageDrawable(TangGuoActivity.icon);
-		} else {
-			holder.app_icon.setImageDrawable(cachedImage);
-		}
+//		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(url,
+//				new ImageCallback() {
+//					public void imageLoaded(Drawable imageDrawable,
+//							String imageUrl) {
+//						ImageView imageViewByTag = (ImageView) mListView
+//								.findViewWithTag(imageUrl);
+//						if (imageViewByTag != null) {
+//							imageViewByTag.setImageDrawable(imageDrawable);
+//						}
+//					}
+//				});
+//		if (cachedImage == null) {
+//			holder.app_icon.setImageDrawable(TangGuoActivity.icon);
+//		} else {
+//			holder.app_icon.setImageDrawable(cachedImage);
+//		}
+		
+		mImageLoader.loadImage(url, holder.app_icon, true,false);
 		holder.app_sign.setOnClickListener(new OnClickListener() {
 
 			@Override

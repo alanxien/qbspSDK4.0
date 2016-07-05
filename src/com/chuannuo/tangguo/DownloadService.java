@@ -37,10 +37,10 @@ import android.provider.Settings.Secure;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.chuannuo.tangguo.SyncImageLoader.ImageCallback;
 import com.chuannuo.tangguo.androidprocess.AndroidAppProcess;
 import com.chuannuo.tangguo.androidprocess.AndroidAppProcessLoader;
 import com.chuannuo.tangguo.androidprocess.Listener;
+import com.chuannuo.tangguo.imageLoader.ImageLoader;
 import com.chuannuo.tangguo.listener.ResponseStateListener;
 
 /**
@@ -175,23 +175,24 @@ public class DownloadService extends Service implements Listener{
 		/*
 		 * 异步加载图标
 		 */
-		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(
-				appInfo.getIcon(), new ImageCallback() {
-					public void imageLoaded(Drawable imageDrawable,
-							String imageUrl) {
-						builder.setLargeIcon(ResourceUtil
-								.drawable2Bitmap(imageDrawable));
-						// 发出通知
-						downloadNotificationManager.notify(0,
-								builder.getNotification());
-					}
-				});
-		if (cachedImage == null) {
-			builder.setLargeIcon(ResourceUtil.getImageFromAssetsFile(this,
-					"tangguo.png"));
-		} else {
-			builder.setLargeIcon(ResourceUtil.drawable2Bitmap(cachedImage));
-		}
+//		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(
+//				appInfo.getIcon(), new ImageCallback() {
+//					public void imageLoaded(Drawable imageDrawable,
+//							String imageUrl) {
+//						builder.setLargeIcon(ResourceUtil
+//								.drawable2Bitmap(imageDrawable));
+//						// 发出通知
+//						downloadNotificationManager.notify(0,
+//								builder.getNotification());
+//					}
+//				});
+//		if (cachedImage == null) {
+//			builder.setLargeIcon(ResourceUtil.getImageFromAssetsFile(this,
+//					"tangguo.png"));
+//		} else {
+//			builder.setLargeIcon(ResourceUtil.drawable2Bitmap(cachedImage));
+//		}
+		//builder.setLargeIcon();
 
 		if(null != TangGuoWall.downLoadListener){
 			TangGuoWall.downLoadListener.onDownloadStart(appInfo.getAdId());

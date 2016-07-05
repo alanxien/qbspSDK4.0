@@ -373,6 +373,22 @@ public class FragmentRecomm extends BaseFragment {
 //													editor.putString(dUrl, fileUrl);
 //													editor.commit();
 													appInfo.setH5_big_url(h5Url);
+													
+													JSONArray imgArray = obj.getJSONArray("picture_list");
+													if(imgArray!=null && imgArray.length()>0){
+														int len = imgArray.length();
+														List<String> imgs = new ArrayList<String>();
+														for(int k=0; k<len; k++){
+															String url = imgArray.getString(k);
+															if (!url.contains("http")) {
+																url = Constant.URL.ROOT_URL
+																		+ url;
+															}
+															imgs.add(url);
+														}
+														appInfo.setImgsList(imgs);
+													}
+													
 													appInfo.setIcon(iconUrl);
 													
 													appInfo.setClicktype(obj.getInt("clicktype"));

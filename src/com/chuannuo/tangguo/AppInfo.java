@@ -1,6 +1,7 @@
 package com.chuannuo.tangguo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import android.graphics.Bitmap;
 
@@ -44,6 +45,7 @@ public class AppInfo implements Serializable{
 	private int is_photo_task;  //0不支持，1支持
 	private String photo;//客户上传的照片
 	private String  photo_remarks;
+	private List<String> imgsList;
 	
 	private boolean isSign = false; //是否是签到任务
 	private boolean isSignTime = false;
@@ -275,6 +277,12 @@ public class AppInfo implements Serializable{
 	}
 	public void setPhoto_remarks(String photo_remarks) {
 		this.photo_remarks = photo_remarks;
+	}
+	public List<String> getImgsList() {
+		return imgsList;
+	}
+	public void setImgsList(List<String> imgsList) {
+		this.imgsList = imgsList;
 	}
 
 }
