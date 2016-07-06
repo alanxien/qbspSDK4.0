@@ -103,22 +103,7 @@ public class RecommendTaskAdapter extends BaseAdapter {
 		holder.app_size.setText(appInfo.getResource_size() + "M");
 		String url = this.infoList.get(position).getIcon();
 		holder.app_icon.setTag(url);
-//		Drawable cachedImage = SyncImageLoader.getInstance().loadDrawable(url,
-//				new ImageCallback() {
-//					public void imageLoaded(Drawable imageDrawable,
-//							String imageUrl) {
-//						ImageView imageViewByTag = (ImageView) mListView
-//								.findViewWithTag(imageUrl);
-//						if (imageViewByTag != null) {
-//							imageViewByTag.setImageDrawable(imageDrawable);
-//						}
-//					}
-//				});
-//		if (cachedImage == null) {
-//			holder.app_icon.setImageDrawable(TangGuoActivity.icon);
-//		} else {
-//			holder.app_icon.setImageDrawable(cachedImage);
-//		}
+
 		mImageLoader.loadImage(url, holder.app_icon, true,false);
 		return convertView;
 	}

@@ -692,13 +692,14 @@ public class TangGuoActivity extends FragmentActivity implements
 						editor.commit();
 
 						progressDialog.dismiss();
-						fragmentDownLoad.rl_upload.setVisibility(View.GONE);
+						//fragmentDownLoad.linearLayout9.setVisibility(View.GONE);
 						Toast.makeText(TangGuoActivity.this, "图片上传成功",
 								Toast.LENGTH_LONG).show();
 					} else {
 						Toast.makeText(TangGuoActivity.this,
 								"图片上传失败！" + obj.getString("info"),
 								Toast.LENGTH_LONG).show();
+						progressDialog.dismiss();
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

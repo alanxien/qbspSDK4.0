@@ -87,12 +87,6 @@ public class FragmentRecomm extends BaseFragment {
 			reportInstalledApp();
 			isFirst = false;
 		}else{
-//			if (null == adapter) {
-//				adapter = new RecommendTaskAdapter(getActivity(),
-//						recommList, myListView);
-//			} else {
-//				adapter.notifyDataSetChanged();
-//			}
 			myListView.setAdapter(adapter);
 		}
 		return view;
@@ -105,8 +99,10 @@ public class FragmentRecomm extends BaseFragment {
 			for (int i = recommList.size() - 1; i >= 0; i--) {
 				app = recommList.get(i);
 				if (app.getResource_id() == pref
-						.getInt(Constant.RESOURCE_ID, 0)) {
+						.getInt(Constant.RESOURCE_ID, 0) && app.getClicktype()!=1) {
 					recommList.remove(i);
+					editor.putInt(Constant.RESOURCE_ID, 0);
+					editor.commit();
 					break;
 				}
 			}

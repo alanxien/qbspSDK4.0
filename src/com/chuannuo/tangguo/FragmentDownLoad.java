@@ -8,13 +8,10 @@
  */
 package com.chuannuo.tangguo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -27,12 +24,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -75,7 +69,6 @@ public class FragmentDownLoad extends BaseFragment {
 	private TextView tv_tips2;
 	private TextView tv_tips3;
 	private TextView tv_tips4;
-	public RelativeLayout rl_upload; sfsfdfdsfs// 上传图
 
 	public TextView tv_desc;
 	private TextView tv_downLoad;
@@ -236,26 +229,12 @@ public class FragmentDownLoad extends BaseFragment {
 		/*
 		 * 图片上传
 		 */
-		rl_upload = new RelativeLayout(getActivity());
 		ImageView iv_upload = new ImageView(getActivity());
 
 		LinearLayout.LayoutParams lpUpload = new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		LinearLayout.LayoutParams rllp = new LinearLayout.LayoutParams(0, 300,
-				1);
 		LinearLayout.LayoutParams ivlp = new LinearLayout.LayoutParams(0, 300,
 				1);
-		RelativeLayout.LayoutParams tvlp = new RelativeLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-		rllp.setMargins(0, 0, 20, 0);
-		tvlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		tvlp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-
-		rl_upload.setClickable(true);
-		rl_upload.setBackgroundColor(Color
-				.parseColor(Constant.ColorValues.UPLOAD_IMG_BCAK));
-		rl_upload.setLayoutParams(rllp);
 
 		iv_upload.setLayoutParams(ivlp);
 
@@ -276,7 +255,7 @@ public class FragmentDownLoad extends BaseFragment {
 
 		linearLayout9.setPadding(20, 20, 20, 20);
 		linearLayout9.setLayoutParams(lpUpload);
-		linearLayout9.addView(rl_upload);
+		//linearLayout9.addView(rl_upload);
 		linearLayout9.addView(iv_upload);
 
 		ivStep1.setLayoutParams(lp7);
@@ -445,10 +424,6 @@ public class FragmentDownLoad extends BaseFragment {
 			} else {
 				linearLayout4.setVisibility(View.VISIBLE);
 
-				// tv_tips1.setText(appInfo.getAlert()+appInfo.getScore()+appInfo.getTextName());
-				// tv_tips2.setText("安装完成后，请到未完成任务列表中，继续签到，每次签到即可获得"+10*appInfo.getVcPrice()+appInfo.getTextName());
-				// tv_tips3.setText("每隔"+appInfo.getSign_rules()+"天可签到一次，签到"+appInfo.getNeedSign_times()+"次任务完成");
-				//
 				if (appInfo.getClicktype() == 1) {
 					tv_tips1.setText(appInfo.getFile());
 					tv_tips1.setAutoLinkMask(Linkify.ALL);
@@ -458,19 +433,11 @@ public class FragmentDownLoad extends BaseFragment {
 					tv_tips3.setText("按下面示例图截图上传即可获得 "
 							+ appInfo.getPhoto_integral()
 							+ appInfo.getTextName() + "，（注意只有一次上传机会，请严格按照要求上传）");
-					rl_upload.setVisibility(View.VISIBLE);
+					linearLayout9.setVisibility(View.VISIBLE);
 					tv_screen.setVisibility(View.VISIBLE);
 					imgsScrollView.setVisibility(View.VISIBLE);
 					editor.putBoolean(Constant.IS_SIGN, false);
 					editor.commit();
-					// 查看大图
-					rl_upload.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							viewBigPic(appInfo.getH5_big_url());
-						}
-					});
 
 					if (appInfo.getImgsList() != null
 							&& appInfo.getImgsList().size() > 0) {
@@ -488,7 +455,7 @@ public class FragmentDownLoad extends BaseFragment {
 							imageView.setId(i);
 							imageView.setLayoutParams(lp);
 							imageView.setPadding(15, 0, 15, 0);
-							imageView.setImageDrawable(TangGuoActivity.icon);
+							imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
 							mImageLoader.loadImage(url, imageView, true, false);
 							linearLayout.addView(imageView);
 							// 查看大图
@@ -510,7 +477,7 @@ public class FragmentDownLoad extends BaseFragment {
 
 						ImageView imageView = new ImageView(getActivity());
 						imageView.setLayoutParams(lp);
-						imageView.setImageDrawable(TangGuoActivity.icon);
+						imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
 						mImageLoader.loadImage(appInfo.getH5_big_url(),
 								imageView, true, false);
 						linearLayout.addView(imageView);
@@ -553,19 +520,11 @@ public class FragmentDownLoad extends BaseFragment {
 								+ "，（注意只有一次上传机会，请严格按照要求上传）");
 						imgsScrollView.setVisibility(View.VISIBLE);
 						if (appInfo.isSign()) {
-							rl_upload.setVisibility(View.VISIBLE);
+							linearLayout9.setVisibility(View.VISIBLE);
 						} else {
-							rl_upload.setVisibility(View.GONE);
+							linearLayout9.setVisibility(View.GONE);
 						}
 						tv_screen.setVisibility(View.VISIBLE);
-						// 查看大图
-						rl_upload.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								viewBigPic(appInfo.getH5_big_url());
-							}
-						});
 
 						if (appInfo.getImgsList() != null
 								&& appInfo.getImgsList().size() > 0) {
@@ -584,8 +543,7 @@ public class FragmentDownLoad extends BaseFragment {
 								imageView.setId(i);
 								imageView.setLayoutParams(lp);
 								imageView.setPadding(15, 0, 15, 0);
-								imageView
-										.setImageDrawable(TangGuoActivity.icon);
+								imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
 								mImageLoader.loadImage(url, imageView, true,
 										false);
 								linearLayout.addView(imageView);
@@ -609,7 +567,7 @@ public class FragmentDownLoad extends BaseFragment {
 
 							ImageView imageView = new ImageView(getActivity());
 							imageView.setLayoutParams(lp);
-							imageView.setImageDrawable(TangGuoActivity.icon);
+							imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
 							mImageLoader.loadImage(appInfo.getH5_big_url(),
 									imageView, true, false);
 							linearLayout.addView(imageView);
@@ -625,7 +583,7 @@ public class FragmentDownLoad extends BaseFragment {
 						}
 					} else {
 						tv_tips1.setText(str);
-						rl_upload.setVisibility(View.GONE);
+						linearLayout9.setVisibility(View.GONE);
 						imgsScrollView.setVisibility(View.GONE);
 						tv_screen.setVisibility(View.GONE);
 					}
