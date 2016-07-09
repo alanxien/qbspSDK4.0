@@ -456,7 +456,7 @@ public class FragmentDownLoad extends BaseFragment {
 							imageView.setLayoutParams(lp);
 							imageView.setPadding(15, 0, 15, 0);
 							imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
-							mImageLoader.loadImage(url, imageView, true, false);
+							mImageLoader.loadImage(url, imageView, true, true);
 							linearLayout.addView(imageView);
 							// 查看大图
 							imageView.setOnClickListener(new OnClickListener() {
@@ -479,7 +479,7 @@ public class FragmentDownLoad extends BaseFragment {
 						imageView.setLayoutParams(lp);
 						imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
 						mImageLoader.loadImage(appInfo.getH5_big_url(),
-								imageView, true, false);
+								imageView, true, true);
 						linearLayout.addView(imageView);
 						// 查看大图
 						imageView.setOnClickListener(new OnClickListener() {
@@ -545,7 +545,7 @@ public class FragmentDownLoad extends BaseFragment {
 								imageView.setPadding(15, 0, 15, 0);
 								imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
 								mImageLoader.loadImage(url, imageView, true,
-										false);
+										true);
 								linearLayout.addView(imageView);
 								// 查看大图
 								imageView
@@ -569,7 +569,7 @@ public class FragmentDownLoad extends BaseFragment {
 							imageView.setLayoutParams(lp);
 							imageView.setImageBitmap(ResourceUtil.getImageFromAssetsFile(getActivity(),"tangguo.png"));
 							mImageLoader.loadImage(appInfo.getH5_big_url(),
-									imageView, true, false);
+									imageView, true, true);
 							linearLayout.addView(imageView);
 							// 查看大图
 							imageView.setOnClickListener(new OnClickListener() {

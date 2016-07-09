@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -178,13 +179,20 @@ public class PhoneInformation {
                         + location.getLongitude());     
                     }  
                 }
-            };  
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1000, 0,locationListener);     
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);     
-            if(location != null){     
-                latitude = location.getLatitude(); //经度     
-                longitude = location.getLongitude(); //纬度  
-            }     
+            }; 
+            List<String> list = locationManager.getAllProviders();
+            for(String c : list) {
+    			System.out.println("LocationManager provider:" + c);
+    			if (c.equals(LocationManager.NETWORK_PROVIDER)){
+    				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1000, 0,locationListener);     
+    	            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);     
+    	            if(location != null){     
+    	                latitude = location.getLatitude(); //经度     
+    	                longitude = location.getLongitude(); //纬度  
+    	            }
+    				break;
+    			}
+            }
         }
         
         return latitude+"-"+longitude;
